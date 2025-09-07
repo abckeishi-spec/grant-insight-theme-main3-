@@ -22,78 +22,78 @@ function gi_load_phase1_improvements() {
     $theme_dir = get_template_directory();
     
     // 安全な出力関数の読み込み（最優先）
-    if (file_exists($theme_dir . '/safe-output-functions.php')) {
-        require_once $theme_dir . '/safe-output-functions.php';
+    if (file_exists($theme_dir . '/inc/phase1/safe-output-functions.php')) {
+        require_once $theme_dir . '/inc/phase1/safe-output-functions.php';
     }
     
     // 改善版ヘルパー関数の読み込み
-    if (file_exists($theme_dir . '/helpers-improved.php')) {
-        require_once $theme_dir . '/helpers-improved.php';
+    if (file_exists($theme_dir . '/inc/phase1/helpers-improved.php')) {
+        require_once $theme_dir . '/inc/phase1/helpers-improved.php';
     }
     
     // 改善版AJAXハンドラーの読み込み
-    if (file_exists($theme_dir . '/ajax-handlers-improved.php')) {
-        require_once $theme_dir . '/ajax-handlers-improved.php';
+    if (file_exists($theme_dir . '/inc/phase1/ajax-handlers-improved.php')) {
+        require_once $theme_dir . '/inc/phase1/ajax-handlers-improved.php';
     }
     
     // 動的件数取得機能の読み込み
-    if (file_exists($theme_dir . '/grant-counts.php')) {
-        require_once $theme_dir . '/grant-counts.php';
+    if (file_exists($theme_dir . '/inc/phase1/grant-counts.php')) {
+        require_once $theme_dir . '/inc/phase1/grant-counts.php';
     }
     
     // AI診断機能の読み込み
-    if (file_exists($theme_dir . '/ai-diagnosis.php')) {
-        require_once $theme_dir . '/ai-diagnosis.php';
+    if (file_exists($theme_dir . '/inc/phase1/ai-diagnosis.php')) {
+        require_once $theme_dir . '/inc/phase1/ai-diagnosis.php';
     }
     
     // カスタマイザー設定の読み込み（タスク4&5）
-    if (file_exists($theme_dir . '/customizer-settings.php')) {
-        require_once $theme_dir . '/customizer-settings.php';
+    if (file_exists($theme_dir . '/inc/phase1/customizer-settings.php')) {
+        require_once $theme_dir . '/inc/phase1/customizer-settings.php';
     }
     
     // アイコン管理機能の読み込み（タスク5）
-    if (file_exists($theme_dir . '/icon-management.php')) {
-        require_once $theme_dir . '/icon-management.php';
+    if (file_exists($theme_dir . '/inc/phase1/icon-management.php')) {
+        require_once $theme_dir . '/inc/phase1/icon-management.php';
     }
     
     // データ検証・統一機能の読み込み（タスク9）
-    if (file_exists($theme_dir . '/data-validation.php')) {
-        require_once $theme_dir . '/data-validation.php';
+    if (file_exists($theme_dir . '/inc/phase1/data-validation.php')) {
+        require_once $theme_dir . '/inc/phase1/data-validation.php';
     }
     
     // 個人向けカテゴリ機能の読み込み（タスク10）
-    if (file_exists($theme_dir . '/individual-categories.php')) {
-        require_once $theme_dir . '/individual-categories.php';
+    if (file_exists($theme_dir . '/inc/phase1/individual-categories.php')) {
+        require_once $theme_dir . '/inc/phase1/individual-categories.php';
     }
     
     // カテゴリ表示機能の読み込み（タスク11）
-    if (file_exists($theme_dir . '/category-display.php')) {
-        require_once $theme_dir . '/category-display.php';
+    if (file_exists($theme_dir . '/inc/phase1/category-display.php')) {
+        require_once $theme_dir . '/inc/phase1/category-display.php';
     }
     
     // 検索・フィルター安定化の読み込み（タスク12）
-    if (file_exists($theme_dir . '/search-filter-stability.php')) {
-        require_once $theme_dir . '/search-filter-stability.php';
+    if (file_exists($theme_dir . '/inc/phase1/search-filter-stability.php')) {
+        require_once $theme_dir . '/inc/phase1/search-filter-stability.php';
     }
     
     // エラーメッセージ・ガイダンス強化の読み込み（タスク13）
-    if (file_exists($theme_dir . '/error-guidance-system.php')) {
-        require_once $theme_dir . '/error-guidance-system.php';
+    if (file_exists($theme_dir . '/inc/phase1/error-guidance-system.php')) {
+        require_once $theme_dir . '/inc/phase1/error-guidance-system.php';
     }
     
     // レスポンシブ・アクセシビリティ強化の読み込み（タスク14）
-    if (file_exists($theme_dir . '/responsive-accessibility.php')) {
-        require_once $theme_dir . '/responsive-accessibility.php';
+    if (file_exists($theme_dir . '/inc/phase1/responsive-accessibility.php')) {
+        require_once $theme_dir . '/inc/phase1/responsive-accessibility.php';
     }
     
     // 管理画面機能充実の読み込み（タスク15）
-    if (file_exists($theme_dir . '/admin-enhancements.php')) {
-        require_once $theme_dir . '/admin-enhancements.php';
+    if (file_exists($theme_dir . '/inc/phase1/admin-enhancements.php')) {
+        require_once $theme_dir . '/inc/phase1/admin-enhancements.php';
     }
     
     // システム最適化の読み込み（タスク16）
-    if (file_exists($theme_dir . '/system-optimization.php')) {
-        require_once $theme_dir . '/system-optimization.php';
+    if (file_exists($theme_dir . '/inc/phase1/system-optimization.php')) {
+        require_once $theme_dir . '/inc/phase1/system-optimization.php';
     }
 }
 add_action('after_setup_theme', 'gi_load_phase1_improvements', 5);
@@ -158,20 +158,20 @@ function gi_add_admin_notices() {
     }
     
     $improvements = array(
-        'セキュリティ・エラーハンドリング統一化' => file_exists(get_template_directory() . '/ajax-handlers-improved.php'),
-        '件数表示の動的化' => file_exists(get_template_directory() . '/grant-counts.php'),
-        'AI診断機能' => file_exists(get_template_directory() . '/ai-diagnosis.php'),
-        '改善版ヘルパー関数' => file_exists(get_template_directory() . '/helpers-improved.php'),
-        'カスタマイザー設定' => file_exists(get_template_directory() . '/customizer-settings.php'),
-        'アイコン管理' => file_exists(get_template_directory() . '/icon-management.php'),
-        'データ検証・統一' => file_exists(get_template_directory() . '/data-validation.php'),
-        '個人向けカテゴリ' => file_exists(get_template_directory() . '/individual-categories.php'),
-        'カテゴリ表示機能' => file_exists(get_template_directory() . '/category-display.php'),
-        '検索・フィルター安定化' => file_exists(get_template_directory() . '/search-filter-stability.php'),
-        'エラー・ガイダンス強化' => file_exists(get_template_directory() . '/error-guidance-system.php'),
-        'レスポンシブ・アクセシビリティ' => file_exists(get_template_directory() . '/responsive-accessibility.php'),
-        '管理画面機能充実' => file_exists(get_template_directory() . '/admin-enhancements.php'),
-        'システム最適化' => file_exists(get_template_directory() . '/system-optimization.php')
+        'セキュリティ・エラーハンドリング統一化' => file_exists(get_template_directory() . '/inc/phase1/ajax-handlers-improved.php'),
+        '件数表示の動的化' => file_exists(get_template_directory() . '/inc/phase1/grant-counts.php'),
+        'AI診断機能' => file_exists(get_template_directory() . '/inc/phase1/ai-diagnosis.php'),
+        '改善版ヘルパー関数' => file_exists(get_template_directory() . '/inc/phase1/helpers-improved.php'),
+        'カスタマイザー設定' => file_exists(get_template_directory() . '/inc/phase1/customizer-settings.php'),
+        'アイコン管理' => file_exists(get_template_directory() . '/inc/phase1/icon-management.php'),
+        'データ検証・統一' => file_exists(get_template_directory() . '/inc/phase1/data-validation.php'),
+        '個人向けカテゴリ' => file_exists(get_template_directory() . '/inc/phase1/individual-categories.php'),
+        'カテゴリ表示機能' => file_exists(get_template_directory() . '/inc/phase1/category-display.php'),
+        '検索・フィルター安定化' => file_exists(get_template_directory() . '/inc/phase1/search-filter-stability.php'),
+        'エラー・ガイダンス強化' => file_exists(get_template_directory() . '/inc/phase1/error-guidance-system.php'),
+        'レスポンシブ・アクセシビリティ' => file_exists(get_template_directory() . '/inc/phase1/responsive-accessibility.php'),
+        '管理画面機能充実' => file_exists(get_template_directory() . '/inc/phase1/admin-enhancements.php'),
+        'システム最適化' => file_exists(get_template_directory() . '/inc/phase1/system-optimization.php')
     );
     
     $all_loaded = !in_array(false, $improvements, true);

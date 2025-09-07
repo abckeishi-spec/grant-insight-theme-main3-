@@ -3173,4 +3173,12 @@ if (file_exists(get_template_directory() . '/functions-integration.php')) {
     require_once get_template_directory() . '/functions-integration.php';
 }
 
+/**
+ * ACF代替機能と初期セットアップ
+ * ACFプラグインがインストールされていない場合の代替機能を提供
+ */
+if (file_exists(get_template_directory() . '/quick-setup.php')) {
+    require_once get_template_directory() . '/quick-setup.php';
+}
+
 ?>
