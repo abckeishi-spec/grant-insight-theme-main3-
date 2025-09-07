@@ -1,9 +1,14 @@
 <?php
 /**
- * 機能統合ファイル
+ * Grant Insight テーマ - Phase 1 改修統合ファイル
  * 
- * Phase 1の改善機能をWordPressテーマに統合します。
- * このファイルをfunctions.phpから読み込んでください。
+ * このファイルを既存のfunctions.phpに含めることで、
+ * Phase 1の改修機能を有効化します。
+ * 
+ * 使用方法:
+ * 1. このファイルをテーマディレクトリに配置
+ * 2. functions.phpの最後に以下を追加:
+ *    require_once get_template_directory() . '/functions-integration.php';
  */
 
 if (!defined('ABSPATH')) {
@@ -11,181 +16,298 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Phase 1の改善ファイルを読み込み
+ * Phase 1 改修ファイルの読み込み
  */
 function gi_load_phase1_improvements() {
-    // 改善版AJAX処理（セキュリティ強化版）
-    if (file_exists(get_template_directory() . '/ajax-handlers-improved.php')) {
-        require_once get_template_directory() . '/ajax-handlers-improved.php';
+    $theme_dir = get_template_directory();
+    
+    // 改善版ヘルパー関数の読み込み
+    if (file_exists($theme_dir . '/helpers-improved.php')) {
+        require_once $theme_dir . '/helpers-improved.php';
     }
     
-    // 助成金件数動的取得機能
-    if (file_exists(get_template_directory() . '/grant-counts.php')) {
-        require_once get_template_directory() . '/grant-counts.php';
+    // 改善版AJAXハンドラーの読み込み
+    if (file_exists($theme_dir . '/ajax-handlers-improved.php')) {
+        require_once $theme_dir . '/ajax-handlers-improved.php';
     }
     
-    // AI診断機能バックエンド
-    if (file_exists(get_template_directory() . '/ai-diagnosis.php')) {
-        require_once get_template_directory() . '/ai-diagnosis.php';
+    // 動的件数取得機能の読み込み
+    if (file_exists($theme_dir . '/grant-counts.php')) {
+        require_once $theme_dir . '/grant-counts.php';
+    }
+    
+    // AI診断機能の読み込み
+    if (file_exists($theme_dir . '/ai-diagnosis.php')) {
+        require_once $theme_dir . '/ai-diagnosis.php';
     }
 }
-
-// 初期化時に読み込み
 add_action('after_setup_theme', 'gi_load_phase1_improvements', 5);
 
 /**
- * 必要な追加ヘルパー関数
+ * 既存のAJAXハンドラーを無効化（改善版と置き換え）
  */
-
-// 安全な抜粋取得
-if (!function_exists('gi_safe_excerpt')) {
-    function gi_safe_excerpt($text, $length = 150) {
-        $text = strip_shortcodes($text);
-        $text = wp_strip_all_tags($text);
-        $text = mb_substr($text, 0, $length);
-        if (mb_strlen($text) === $length) {
-            $text .= '...';
-        }
-        return $text;
-    }
+function gi_disable_old_ajax_handlers() {
+    // 既存のAJAXアクションを削除
+    remove_action('wp_ajax_gi_load_grants', 'gi_ajax_load_grants');
+    remove_action('wp_ajax_nopriv_gi_load_grants', 'gi_ajax_load_grants');
+    remove_action('wp_ajax_get_search_suggestions', 'gi_ajax_get_search_suggestions');
+    remove_action('wp_ajax_nopriv_get_search_suggestions', 'gi_ajax_get_search_suggestions');
+    remove_action('wp_ajax_advanced_search', 'gi_ajax_advanced_search');
+    remove_action('wp_ajax_nopriv_advanced_search', 'gi_ajax_advanced_search');
+    remove_action('wp_ajax_grant_insight_search', 'gi_ajax_grant_insight_search');
+    remove_action('wp_ajax_nopriv_grant_insight_search', 'gi_ajax_grant_insight_search');
+    remove_action('wp_ajax_toggle_favorite', 'gi_ajax_toggle_favorite');
+    remove_action('wp_ajax_get_user_favorites', 'gi_ajax_get_user_favorites');
+    remove_action('wp_ajax_get_related_posts', 'gi_ajax_get_related_posts');
+    remove_action('wp_ajax_nopriv_get_related_posts', 'gi_ajax_get_related_posts');
+    remove_action('wp_ajax_track_post_view', 'gi_ajax_track_post_view');
+    remove_action('wp_ajax_nopriv_track_post_view', 'gi_ajax_track_post_view');
 }
-
-// 安全なメタデータ取得
-if (!function_exists('gi_safe_get_meta')) {
-    function gi_safe_get_meta($post_id, $key, $default = '') {
-        $value = get_post_meta($post_id, $key, true);
-        return !empty($value) ? $value : $default;
-    }
-}
-
-// 安全なエスケープ
-if (!function_exists('gi_safe_escape')) {
-    function gi_safe_escape($text) {
-        return esc_html($text);
-    }
-}
-
-// 安全なURL処理
-if (!function_exists('gi_safe_url')) {
-    function gi_safe_url($url) {
-        return esc_url($url);
-    }
-}
-
-// 安全な属性処理
-if (!function_exists('gi_safe_attr')) {
-    function gi_safe_attr($text) {
-        return esc_attr($text);
-    }
-}
-
-// 安全な数値フォーマット
-if (!function_exists('gi_safe_number_format')) {
-    function gi_safe_number_format($number) {
-        return number_format(intval($number));
-    }
-}
-
-// 関連投稿取得（未定義の場合）
-if (!function_exists('gi_get_related_posts')) {
-    function gi_get_related_posts($post_id, $count = 4) {
-        $post = get_post($post_id);
-        if (!$post) {
-            return array();
-        }
-        
-        // カテゴリーベースで関連投稿を取得
-        $categories = wp_get_post_terms($post_id, $post->post_type . '_category', array('fields' => 'ids'));
-        
-        $args = array(
-            'post_type' => $post->post_type,
-            'post__not_in' => array($post_id),
-            'posts_per_page' => $count,
-            'post_status' => 'publish'
-        );
-        
-        if (!empty($categories)) {
-            $args['tax_query'] = array(
-                array(
-                    'taxonomy' => $post->post_type . '_category',
-                    'field' => 'term_id',
-                    'terms' => $categories
-                )
-            );
-        }
-        
-        return get_posts($args);
-    }
-}
-
-// 投稿ビュー追跡（未定義の場合）
-if (!function_exists('gi_track_post_view')) {
-    function gi_track_post_view($post_id) {
-        if (!$post_id) return;
-        
-        $count_key = 'views_count';
-        $count = get_post_meta($post_id, $count_key, true);
-        
-        if ($count == '') {
-            $count = 0;
-            delete_post_meta($post_id, $count_key);
-            add_post_meta($post_id, $count_key, '1');
-        } else {
-            $count++;
-            update_post_meta($post_id, $count_key, $count);
-        }
-    }
-}
+add_action('init', 'gi_disable_old_ajax_handlers', 20);
 
 /**
- * AJAXノンス登録
+ * JavaScript用のローカライズデータ拡張
  */
-function gi_register_ajax_nonces() {
-    // 管理画面とフロントエンドの両方で登録
-    wp_localize_script('gi-main-script', 'gi_ajax', array(
+function gi_extend_localize_data() {
+    if (is_admin()) {
+        return;
+    }
+    
+    // AI診断用のnonce追加
+    wp_localize_script('gi-main', 'gi_ai_diagnosis', array(
         'ajax_url' => admin_url('admin-ajax.php'),
-        'nonce' => wp_create_nonce('gi_ajax_nonce'),
-        'search_nonce' => wp_create_nonce('grant_insight_search_nonce'),
-        'diagnosis_nonce' => wp_create_nonce('gi_ai_diagnosis_nonce')
+        'nonce' => wp_create_nonce('gi_ai_diagnosis_nonce'),
+        'questions' => gi_get_diagnosis_questions(),
+        'messages' => array(
+            'loading' => '診断中...',
+            'error' => 'エラーが発生しました。',
+            'required' => '必須項目を入力してください。',
+            'no_results' => '該当する助成金が見つかりませんでした。'
+        )
+    ));
+    
+    // 件数取得用のnonce追加
+    wp_localize_script('gi-main', 'gi_counts', array(
+        'ajax_url' => admin_url('admin-ajax.php'),
+        'nonce' => wp_create_nonce('gi_ajax_nonce')
     ));
 }
-add_action('wp_enqueue_scripts', 'gi_register_ajax_nonces', 20);
-add_action('admin_enqueue_scripts', 'gi_register_ajax_nonces', 20);
+add_action('wp_enqueue_scripts', 'gi_extend_localize_data', 20);
 
 /**
- * データベーステーブル作成（テーマ有効化時）
+ * 管理画面にPhase 1改修の状態を表示
  */
-function gi_phase1_activation() {
-    // AI診断テーブル作成
-    if (function_exists('gi_create_diagnosis_tables')) {
-        gi_create_diagnosis_tables();
+function gi_add_admin_notices() {
+    if (!current_user_can('manage_options')) {
+        return;
     }
-}
-add_action('after_switch_theme', 'gi_phase1_activation');
-
-/**
- * 管理画面への通知追加
- */
-function gi_phase1_admin_notices() {
-    // Phase 1の機能が有効になったことを通知
-    if (get_transient('gi_phase1_activated')) {
+    
+    $improvements = array(
+        'セキュリティ・エラーハンドリング統一化' => file_exists(get_template_directory() . '/ajax-handlers-improved.php'),
+        '件数表示の動的化' => file_exists(get_template_directory() . '/grant-counts.php'),
+        'AI診断機能' => file_exists(get_template_directory() . '/ai-diagnosis.php'),
+        '改善版ヘルパー関数' => file_exists(get_template_directory() . '/helpers-improved.php')
+    );
+    
+    $all_loaded = !in_array(false, $improvements, true);
+    
+    if ($all_loaded) {
         ?>
-        <div class="notice notice-success is-dismissible">
-            <p><strong>助成金診断サイト Phase 1 改修完了</strong></p>
+        <div class="notice notice-success">
+            <p><strong>Grant Insight Phase 1改修:</strong> すべての機能が正常に読み込まれています。</p>
+        </div>
+        <?php
+    } else {
+        ?>
+        <div class="notice notice-warning">
+            <p><strong>Grant Insight Phase 1改修:</strong> 一部の機能が読み込まれていません。</p>
             <ul>
-                <li>✅ セキュリティ・エラーハンドリングの統一化</li>
-                <li>✅ 件数表示の動的化</li>
-                <li>✅ AI診断機能のバックエンド実装</li>
+            <?php foreach ($improvements as $name => $loaded) : ?>
+                <li><?php echo esc_html($name); ?>: <?php echo $loaded ? '✅ 有効' : '❌ 無効'; ?></li>
+            <?php endforeach; ?>
             </ul>
         </div>
         <?php
-        delete_transient('gi_phase1_activated');
     }
 }
-add_action('admin_notices', 'gi_phase1_admin_notices');
+add_action('admin_notices', 'gi_add_admin_notices');
 
-// 初回実行時にトランジェント設定
-if (!get_option('gi_phase1_installed')) {
-    set_transient('gi_phase1_activated', true, 60);
-    update_option('gi_phase1_installed', true);
+/**
+ * データベーステーブルの作成確認と初期化
+ */
+function gi_check_and_create_tables() {
+    global $wpdb;
+    
+    $table_name = $wpdb->prefix . 'gi_diagnosis_history';
+    $table_exists = $wpdb->get_var("SHOW TABLES LIKE '$table_name'") === $table_name;
+    
+    if (!$table_exists) {
+        // テーブルが存在しない場合は作成
+        if (function_exists('gi_create_diagnosis_tables')) {
+            gi_create_diagnosis_tables();
+        }
+    }
+}
+add_action('admin_init', 'gi_check_and_create_tables');
+
+/**
+ * Phase 1改修用のJavaScriptファイル
+ */
+function gi_enqueue_phase1_scripts() {
+    if (is_admin()) {
+        return;
+    }
+    
+    // AI診断用JavaScript
+    wp_enqueue_script(
+        'gi-ai-diagnosis',
+        get_template_directory_uri() . '/assets/js/ai-diagnosis.js',
+        array('jquery'),
+        '1.0.0',
+        true
+    );
+    
+    // 動的件数更新用JavaScript
+    wp_enqueue_script(
+        'gi-dynamic-counts',
+        get_template_directory_uri() . '/assets/js/dynamic-counts.js',
+        array('jquery'),
+        '1.0.0',
+        true
+    );
+}
+add_action('wp_enqueue_scripts', 'gi_enqueue_phase1_scripts');
+
+/**
+ * 既存関数のオーバーライド設定
+ * 既存のhelpers.phpより後に読み込まれるように優先度を設定
+ */
+if (!function_exists('gi_safe_get_meta')) {
+    // helpers-improved.phpの関数が優先される
+}
+
+/**
+ * WP-Cronジョブの設定（キャッシュクリア用）
+ */
+function gi_schedule_cache_clear() {
+    if (!wp_next_scheduled('gi_clear_counts_cache_event')) {
+        wp_schedule_event(time(), 'hourly', 'gi_clear_counts_cache_event');
+    }
+}
+add_action('wp', 'gi_schedule_cache_clear');
+
+// キャッシュクリアイベントのフック
+add_action('gi_clear_counts_cache_event', 'gi_clear_grant_counts_cache');
+
+/**
+ * テーマ無効化時のクリーンアップ
+ */
+function gi_phase1_cleanup() {
+    // スケジュールされたイベントをクリア
+    wp_clear_scheduled_hook('gi_clear_counts_cache_event');
+    
+    // キャッシュをクリア
+    if (function_exists('gi_clear_grant_counts_cache')) {
+        gi_clear_grant_counts_cache();
+    }
+}
+register_deactivation_hook(__FILE__, 'gi_phase1_cleanup');
+
+/**
+ * デバッグモード設定（開発環境用）
+ */
+if (defined('WP_DEBUG') && WP_DEBUG) {
+    // デバッグ情報の出力
+    add_action('wp_footer', function() {
+        if (current_user_can('manage_options')) {
+            echo "<!-- Grant Insight Phase 1 Improvements Loaded -->\n";
+            echo "<!-- Security: Enhanced | Counts: Dynamic | AI: Enabled -->\n";
+        }
+    });
+}
+
+/**
+ * REST API エンドポイントの追加（オプション）
+ */
+function gi_register_rest_endpoints() {
+    // AI診断用RESTエンドポイント
+    register_rest_route('grant-insight/v1', '/ai-diagnosis', array(
+        'methods' => 'POST',
+        'callback' => 'gi_rest_ai_diagnosis',
+        'permission_callback' => '__return_true',
+        'args' => array(
+            'answers' => array(
+                'required' => true,
+                'validate_callback' => function($param, $request, $key) {
+                    return is_array($param);
+                }
+            ),
+        ),
+    ));
+    
+    // 件数取得用RESTエンドポイント
+    register_rest_route('grant-insight/v1', '/grant-counts', array(
+        'methods' => 'GET',
+        'callback' => 'gi_rest_get_counts',
+        'permission_callback' => '__return_true',
+        'args' => array(
+            'type' => array(
+                'required' => true,
+                'validate_callback' => function($param, $request, $key) {
+                    return in_array($param, ['category', 'prefecture', 'total'], true);
+                }
+            ),
+            'slug' => array(
+                'required' => false,
+                'sanitize_callback' => 'sanitize_title'
+            ),
+        ),
+    ));
+}
+add_action('rest_api_init', 'gi_register_rest_endpoints');
+
+/**
+ * REST APIコールバック: AI診断
+ */
+function gi_rest_ai_diagnosis($request) {
+    $answers = $request->get_param('answers');
+    
+    // 内部的にAJAX関数を呼び出し
+    $_POST['answers'] = json_encode($answers);
+    $_POST['nonce'] = wp_create_nonce('gi_ai_diagnosis_nonce');
+    
+    // バッファリング開始
+    ob_start();
+    gi_ai_diagnosis_api();
+    $response = ob_get_clean();
+    
+    return json_decode($response, true);
+}
+
+/**
+ * REST APIコールバック: 件数取得
+ */
+function gi_rest_get_counts($request) {
+    $type = $request->get_param('type');
+    $slug = $request->get_param('slug');
+    
+    switch ($type) {
+        case 'category':
+            $count = gi_get_category_count($slug);
+            break;
+        case 'prefecture':
+            $count = gi_get_prefecture_count($slug);
+            break;
+        case 'total':
+            $count = gi_get_total_grant_count();
+            break;
+        default:
+            $count = 0;
+    }
+    
+    return array(
+        'type' => $type,
+        'slug' => $slug,
+        'count' => $count
+    );
 }

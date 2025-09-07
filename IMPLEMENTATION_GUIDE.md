@@ -1,289 +1,217 @@
-# 🤖 助成金診断サイト Phase 1 実装ガイド
+# Grant Insight Phase 1 実装ガイド
 
 ## 📋 概要
-このガイドでは、Phase 1の改修内容の実装方法とテスト手順を説明します。
+このガイドでは、Grant Insight WordPressテーマのPhase 1改修を既存のサイトに実装する手順を説明します。
 
-## 🔥 Phase 1 実装内容
+## 🎯 Phase 1 改修内容
 
-### ✅ タスク1: セキュリティ・エラーハンドリングの統一化
-- **ファイル**: `ajax-handlers-improved.php`
-- **主な改善点**:
-  - 全AJAX関数への統一的なnonce検証
-  - 再帰的サニタイズ関数の実装
-  - try-catch文による例外処理
-  - WP_Errorの統一ハンドリング
-  - エラーログ機能の実装
+### 1. セキュリティ・エラーハンドリングの統一化
+- すべてのAJAX関数にnonce検証を追加
+- 入力値の再帰的サニタイズ
+- try-catch文による例外処理
+- WP_Error統一ハンドリング
+- エラーログ記録機能
 
-### ✅ タスク2: 件数表示の動的化
-- **ファイル**: `grant-counts.php`
-- **主な機能**:
-  - カテゴリー別件数取得: `gi_get_category_count()`
-  - 都道府県別件数取得: `gi_get_prefecture_count()`
-  - キャッシュ機能（1時間）
-  - ショートコード対応
-  - AJAX API対応
+### 2. 件数表示の動的化
+- カテゴリー別助成金件数の動的取得
+- 都道府県別助成金件数の動的取得
+- キャッシュ機能（1時間）
+- JavaScriptによる自動更新
+- ショートコード対応
 
-### ✅ タスク3: AI診断機能のバックエンド
-- **ファイル**: `ai-diagnosis.php`
-- **主な機能**:
-  - 診断APIエンドポイント
-  - 診断履歴保存（データベース）
-  - マッチングアルゴリズム
-  - フォールバック機能
-  - セッション管理
+### 3. AI診断機能のバックエンド実装
+- 診断API実装
+- 診断履歴保存機能
+- マッチングアルゴリズム
+- エラー時のフォールバック機能
+- セッション管理
+
+## 📁 ファイル構成
+
+```
+/wp-content/themes/your-theme/
+├── ajax-handlers-improved.php    # 改善版AJAXハンドラー
+├── helpers-improved.php          # 改善版ヘルパー関数
+├── grant-counts.php              # 動的件数取得機能
+├── ai-diagnosis.php              # AI診断機能
+├── functions-integration.php     # 統合用ファイル
+└── assets/
+    └── js/
+        ├── ai-diagnosis.js       # AI診断フロントエンド
+        └── dynamic-counts.js     # 動的件数更新JS
+```
 
 ## 🚀 実装手順
 
-### 1. ファイルの配置
-```bash
-# WordPressテーマディレクトリに以下のファイルを配置
-/wp-content/themes/your-theme/
-├── ajax-handlers-improved.php  # 改善版AJAX処理
-├── grant-counts.php            # 件数動的取得
-├── ai-diagnosis.php            # AI診断機能
-└── functions-integration.php   # 統合ファイル
-```
+### ステップ1: ファイルのアップロード
+1. 以下のファイルをテーマディレクトリにアップロード：
+   - `ajax-handlers-improved.php`
+   - `helpers-improved.php`
+   - `grant-counts.php`
+   - `ai-diagnosis.php`
+   - `functions-integration.php`
 
-### 2. functions.phpへの統合
+2. JavaScriptファイルをアップロード：
+   - `assets/js/ai-diagnosis.js`
+   - `assets/js/dynamic-counts.js`
 
-#### オプション A: 新規ファイルを読み込む場合
+### ステップ2: functions.phpの修正
+既存の`functions.php`の最後に以下を追加：
+
 ```php
-// functions.php の最初の方に追加
+// Phase 1 改修の読み込み
 require_once get_template_directory() . '/functions-integration.php';
 ```
 
-#### オプション B: 既存のajax-handlers.phpを置き換える場合
-1. 既存の`ajax-handlers.php`をバックアップ
-2. `ajax-handlers-improved.php`の内容を`ajax-handlers.php`にコピー
-3. `grant-counts.php`と`ai-diagnosis.php`を読み込み
+### ステップ3: 既存AJAXハンドラーの無効化
+既存の`ajax-handlers.php`の読み込みをコメントアウト：
 
 ```php
-// functions.php に追加
-require_once get_template_directory() . '/grant-counts.php';
-require_once get_template_directory() . '/ai-diagnosis.php';
+// require_once get_template_directory() . '/ajax-handlers.php';
 ```
 
-### 3. データベーステーブルの作成
-テーマを再有効化するか、以下のコードを実行：
-```php
-// 一時的にfunctions.phpに追加して実行
-if (function_exists('gi_create_diagnosis_tables')) {
-    gi_create_diagnosis_tables();
-}
-```
+### ステップ4: データベーステーブルの作成
+管理画面にアクセスして、自動的にAI診断用のテーブルが作成されることを確認。
 
-## 📝 使用例
+## 🔧 使用方法
 
-### 件数表示の動的化
+### 動的件数表示
 
-#### PHPでの使用
-```php
-// カテゴリー別件数
-$count = gi_get_category_count('it-digital');
-echo "IT・デジタル: {$count}件";
-
-// 都道府県別件数
-$count = gi_get_prefecture_count('tokyo');
-echo "東京都: {$count}件";
-
-// 表示用ヘルパー
-echo gi_display_grant_count('category', 'manufacturing', '%d件の助成金');
-```
-
-#### ショートコードでの使用
+#### HTMLでの使用例
 ```html
-<!-- カテゴリー別 -->
-[grant_count type="category" slug="it-digital"]
+<!-- カテゴリー件数 -->
+<span data-category-count="it-digital" data-format="%d件" class="animate-count">読み込み中...</span>
 
-<!-- 都道府県別 -->
-[grant_count type="prefecture" slug="tokyo"]
+<!-- 都道府県件数 -->
+<span data-prefecture-count="tokyo" data-format="%d件">読み込み中...</span>
 
-<!-- 全体件数 -->
-[grant_count type="total"]
+<!-- 総件数 -->
+<span data-total-count data-format="全%d件">読み込み中...</span>
 ```
 
-#### JavaScriptでの使用
-```javascript
-// AJAX経由で件数取得
-jQuery.ajax({
-    url: gi_ajax.ajax_url,
-    type: 'POST',
-    data: {
-        action: 'get_grant_counts',
-        nonce: gi_ajax.nonce,
-        type: 'category',
-        slugs: ['it-digital', 'manufacturing', 'retail-service']
-    },
-    success: function(response) {
-        if (response.success) {
-            console.log(response.data); // {it-digital: 125, manufacturing: 98, ...}
-        }
-    }
-});
+#### ショートコードでの使用例
+```
+[grant_count type="category" slug="it-digital" format="%d件"]
+[grant_count type="prefecture" slug="tokyo" format="%d件"]
+[grant_count type="total" format="全%d件"]
 ```
 
-### AI診断機能の使用
+### AI診断機能
 
-#### 診断APIの呼び出し
-```javascript
-const answers = {
-    business_type: 'corporation',
-    industry: 'it',
-    purpose: ['equipment', 'digitalization'],
-    employees: '21-50',
-    location: 'tokyo',
-    budget: '500-1000',
-    urgency: 'immediate'
-};
+#### HTML実装例
+```html
+<!-- 診断開始ボタン -->
+<button class="ai-diagnosis-start">AI診断を開始</button>
 
-jQuery.ajax({
-    url: gi_ajax.ajax_url,
-    type: 'POST',
-    data: {
-        action: 'gi_ai_diagnosis',
-        nonce: gi_ajax.diagnosis_nonce,
-        answers: JSON.stringify(answers)
-    },
-    success: function(response) {
-        if (response.success) {
-            console.log('マッチした助成金:', response.data.matched_grants);
-            console.log('信頼度スコア:', response.data.confidence_score);
-            console.log('推奨事項:', response.data.recommendations);
-        }
-    }
-});
+<!-- 診断モーダル -->
+<div id="ai-diagnosis-modal" style="display:none;">
+    <div class="ai-diagnosis-content">
+        <!-- 診断コンテンツがJavaScriptで動的に生成されます -->
+    </div>
+    <div class="ai-diagnosis-loading" style="display:none;">
+        診断中...
+    </div>
+    <div class="ai-diagnosis-error"></div>
+</div>
 ```
 
-## 🧪 テスト手順
+## 🔍 動作確認
 
-### 1. セキュリティテスト
-```javascript
-// Nonceなしでリクエスト（エラーになるはず）
-jQuery.ajax({
-    url: gi_ajax.ajax_url,
-    type: 'POST',
-    data: {
-        action: 'gi_load_grants',
-        search: 'テスト'
-    },
-    error: function(xhr) {
-        console.log('Expected error:', xhr.responseJSON); // セキュリティエラー
-    }
-});
-```
+### 1. セキュリティ機能の確認
+- ブラウザの開発者ツールでNetworkタブを開く
+- AJAXリクエストのレスポンスを確認
+- nonceエラーが出ないことを確認
 
-### 2. 件数表示テスト
-```php
-// テストコード
-$categories = ['it-digital', 'manufacturing', 'retail-service'];
-foreach ($categories as $cat) {
-    $count = gi_get_category_count($cat);
-    echo "{$cat}: {$count}件\n";
-}
+### 2. 件数表示の確認
+- ページ読み込み時に件数が自動更新されることを確認
+- 開発者コンソールでエラーが出ないことを確認
 
-// キャッシュテスト
-$start = microtime(true);
-gi_get_category_count('it-digital'); // 初回（遅い）
-$time1 = microtime(true) - $start;
+### 3. AI診断の確認
+- 診断ボタンをクリックして診断フローが開始されることを確認
+- 各ステップで回答を選択できることを確認
+- 診断結果が表示されることを確認
 
-$start = microtime(true);
-gi_get_category_count('it-digital'); // 2回目（キャッシュから高速）
-$time2 = microtime(true) - $start;
+## ⚠️ 注意事項
 
-echo "初回: {$time1}秒, キャッシュ: {$time2}秒\n";
-```
+### キャッシュ
+- 件数表示は1時間キャッシュされます
+- 手動でキャッシュをクリアする場合：
+  ```php
+  gi_clear_grant_counts_cache();
+  ```
 
-### 3. AI診断テスト
-```php
-// 診断履歴の確認
-global $wpdb;
-$table = $wpdb->prefix . 'gi_diagnosis_history';
-$results = $wpdb->get_results("SELECT * FROM $table ORDER BY created_at DESC LIMIT 5");
-foreach ($results as $row) {
-    echo "診断ID: {$row->id}, 信頼度: {$row->confidence_score}%\n";
-}
-```
+### パフォーマンス
+- 初回アクセス時は件数取得に時間がかかる場合があります
+- キャッシュが効いた後は高速に動作します
+
+### セキュリティ
+- 本番環境ではWP_DEBUGをfalseに設定してください
+- エラーログは定期的に確認してください
 
 ## 🐛 トラブルシューティング
 
-### よくある問題と解決方法
+### 件数が表示されない場合
+1. JavaScriptコンソールでエラーを確認
+2. AJAXリクエストが正常に送信されているか確認
+3. nonceが正しく設定されているか確認
 
-#### 1. Nonceエラーが発生する
+### AI診断が動作しない場合
+1. データベーステーブルが作成されているか確認：
+   ```sql
+   SHOW TABLES LIKE 'wp_gi_diagnosis_history';
+   ```
+2. JavaScriptエラーを確認
+3. PHPエラーログを確認
+
+### パフォーマンスが遅い場合
+1. オブジェクトキャッシュ（Redis/Memcached）の導入を検討
+2. データベースインデックスの最適化
+3. CDNの利用を検討
+
+## 📊 管理画面での確認
+
+管理画面にアクセスすると、以下の通知が表示されます：
+
+✅ すべての機能が有効な場合：
+> **Grant Insight Phase 1改修:** すべての機能が正常に読み込まれています。
+
+⚠️ 一部の機能が無効な場合：
+> **Grant Insight Phase 1改修:** 一部の機能が読み込まれていません。
+> - セキュリティ・エラーハンドリング統一化: ✅ 有効
+> - 件数表示の動的化: ✅ 有効
+> - AI診断機能: ✅ 有効
+> - 改善版ヘルパー関数: ✅ 有効
+
+## 🔄 アップデート方法
+
+### ファイルの更新
+1. 新しいバージョンのファイルをアップロード
+2. ブラウザキャッシュをクリア
+3. WordPressのキャッシュプラグインがある場合はクリア
+
+### データベースの更新
+AI診断テーブルの構造が変更された場合：
 ```php
-// functions.phpに以下を追加
-add_action('wp_enqueue_scripts', function() {
-    wp_localize_script('jquery', 'gi_ajax', array(
-        'ajax_url' => admin_url('admin-ajax.php'),
-        'nonce' => wp_create_nonce('gi_ajax_nonce'),
-        'diagnosis_nonce' => wp_create_nonce('gi_ai_diagnosis_nonce')
-    ));
-}, 20);
+// functions.phpまたは管理画面から実行
+gi_create_diagnosis_tables();
 ```
-
-#### 2. 件数が0になる
-```php
-// タクソノミーの存在確認
-$taxonomies = get_taxonomies();
-var_dump($taxonomies); // grant_category, grant_prefectureが存在するか確認
-
-// キャッシュクリア
-gi_clear_grant_counts_cache();
-```
-
-#### 3. データベーステーブルが作成されない
-```sql
--- 手動でテーブル作成
-CREATE TABLE wp_gi_diagnosis_history (
-    id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-    user_id bigint(20) UNSIGNED DEFAULT NULL,
-    session_id varchar(255) DEFAULT NULL,
-    answers longtext NOT NULL,
-    results longtext NOT NULL,
-    confidence_score float DEFAULT NULL,
-    created_at datetime DEFAULT CURRENT_TIMESTAMP,
-    updated_at datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY (id),
-    KEY user_id (user_id),
-    KEY session_id (session_id),
-    KEY created_at (created_at)
-);
-```
-
-## 📊 パフォーマンス最適化
-
-### キャッシュ戦略
-- 件数データ: 1時間キャッシュ
-- 診断結果: セッション単位でキャッシュ
-- 静的リソース: ブラウザキャッシュ活用
-
-### データベース最適化
-```sql
--- インデックス追加（必要に応じて）
-ALTER TABLE wp_postmeta ADD INDEX idx_grant_amount (meta_key, meta_value);
-ALTER TABLE wp_gi_diagnosis_history ADD INDEX idx_user_session (user_id, session_id);
-```
-
-## 🔒 セキュリティチェックリスト
-
-- [ ] 全AJAX関数にnonce検証実装
-- [ ] 入力値の完全なサニタイズ
-- [ ] SQLインジェクション対策（プリペアドステートメント使用）
-- [ ] XSS対策（適切なエスケープ）
-- [ ] CSRF対策（nonce使用）
-- [ ] 適切なエラーハンドリング
-- [ ] 本番環境でのデバッグ情報非表示
 
 ## 📞 サポート
 
-問題が発生した場合は、以下の情報を含めて報告してください：
-1. WordPressバージョン
-2. PHPバージョン
-3. エラーログ（`wp-content/debug.log`）
-4. ブラウザコンソールのエラー
-5. 実行した操作の詳細
+問題が発生した場合は、以下の情報を含めてお問い合わせください：
+- WordPressバージョン
+- PHPバージョン
+- エラーメッセージ（あれば）
+- 実行した手順
+
+## 📝 変更履歴
+
+### Version 1.0.0 (2024-01-XX)
+- 初回リリース
+- セキュリティ強化
+- 動的件数表示機能
+- AI診断機能
 
 ---
 
-**Last Updated**: 2024-09-07
-**Version**: 1.0.0
-**Author**: Grant Insight Development Team
+**注意**: このガイドは開発環境でテスト後、本番環境に適用することを推奨します。

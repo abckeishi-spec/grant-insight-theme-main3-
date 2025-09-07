@@ -644,3 +644,28 @@ add_action('wp_ajax_nopriv_get_diagnosis_history', 'gi_ajax_get_diagnosis_histor
 
 // テーマ有効化時にテーブル作成
 add_action('after_switch_theme', 'gi_create_diagnosis_tables');
+
+/**
+ * 再帰的サニタイズ関数（helpers.phpから移植）
+ */
+if (!function_exists('gi_sanitize_recursive')) {
+    function gi_sanitize_recursive($data) {
+        if (is_array($data)) {
+            return array_map('gi_sanitize_recursive', $data);
+        }
+        
+        if (is_object($data)) {
+            $sanitized = new stdClass();
+            foreach ($data as $key => $value) {
+                $sanitized->$key = gi_sanitize_recursive($value);
+            }
+            return $sanitized;
+        }
+        
+        if (is_string($data)) {
+            return sanitize_text_field($data);
+        }
+        
+        return $data;
+    }
+}
