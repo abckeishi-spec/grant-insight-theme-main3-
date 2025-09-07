@@ -70,6 +70,21 @@ function gi_load_phase1_improvements() {
     if (file_exists($theme_dir . '/category-display.php')) {
         require_once $theme_dir . '/category-display.php';
     }
+    
+    // 検索・フィルター安定化の読み込み（タスク12）
+    if (file_exists($theme_dir . '/search-filter-stability.php')) {
+        require_once $theme_dir . '/search-filter-stability.php';
+    }
+    
+    // エラーメッセージ・ガイダンス強化の読み込み（タスク13）
+    if (file_exists($theme_dir . '/error-guidance-system.php')) {
+        require_once $theme_dir . '/error-guidance-system.php';
+    }
+    
+    // レスポンシブ・アクセシビリティ強化の読み込み（タスク14）
+    if (file_exists($theme_dir . '/responsive-accessibility.php')) {
+        require_once $theme_dir . '/responsive-accessibility.php';
+    }
 }
 add_action('after_setup_theme', 'gi_load_phase1_improvements', 5);
 
@@ -141,7 +156,10 @@ function gi_add_admin_notices() {
         'アイコン管理' => file_exists(get_template_directory() . '/icon-management.php'),
         'データ検証・統一' => file_exists(get_template_directory() . '/data-validation.php'),
         '個人向けカテゴリ' => file_exists(get_template_directory() . '/individual-categories.php'),
-        'カテゴリ表示機能' => file_exists(get_template_directory() . '/category-display.php')
+        'カテゴリ表示機能' => file_exists(get_template_directory() . '/category-display.php'),
+        '検索・フィルター安定化' => file_exists(get_template_directory() . '/search-filter-stability.php'),
+        'エラー・ガイダンス強化' => file_exists(get_template_directory() . '/error-guidance-system.php'),
+        'レスポンシブ・アクセシビリティ' => file_exists(get_template_directory() . '/responsive-accessibility.php')
     );
     
     $all_loaded = !in_array(false, $improvements, true);
