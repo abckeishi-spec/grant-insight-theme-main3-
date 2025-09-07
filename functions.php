@@ -91,7 +91,8 @@ add_action('after_setup_theme', 'gi_content_width', 0);
 if (!function_exists('gi_enqueue_scripts')) {
     function gi_enqueue_scripts() {
     // Tailwind CSS Play CDN（一元管理）
-    wp_enqueue_script('tailwind-cdn', 'https://cdn.tailwindcss.com', array(), GI_THEME_VERSION, false);
+    // Tailwind CDNはheader.phpで一度だけ読み込む
+    // wp_enqueue_script('tailwind-cdn', 'https://cdn.tailwindcss.com', array(), GI_THEME_VERSION, false);
     
     // Tailwind設定（完全版）
     $tailwind_config = "
@@ -3231,6 +3232,13 @@ function gi_acf_json_save_point($path) {
     return get_template_directory() . '/acf-json';
 }
 add_filter('acf/settings/save_json', 'gi_acf_json_save_point');
+
+/**
+ * パフォーマンス最適化
+ */
+if (file_exists(get_template_directory() . '/performance-optimization.php')) {
+    require_once get_template_directory() . '/performance-optimization.php';
+}
 
 /**
  * Phase 1 改修機能の読み込み

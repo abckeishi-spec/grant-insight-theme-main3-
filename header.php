@@ -59,6 +59,12 @@ if (!function_exists('gi_get_option')) {
     
     <?php wp_head(); ?>
     
+    <!-- Tailwind CSS CDN - 一度だけ読み込む -->
+    <?php if (!defined('TAILWIND_LOADED')) : ?>
+        <?php define('TAILWIND_LOADED', true); ?>
+        <script src="https://cdn.tailwindcss.com"></script>
+    <?php endif; ?>
+    
     <!-- 追加のTailwind設定（functions.phpの設定を拡張） -->
     <script>
         // functions.phpのTailwind設定を拡張

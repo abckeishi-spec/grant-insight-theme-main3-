@@ -7,8 +7,7 @@
 
 get_header(); ?>
 
-<!-- Tailwind CSS CDN -->
-<script src="https://cdn.tailwindcss.com"></script>
+<!-- Tailwind CSS は header.php で読み込み済み -->
 
 <main id="primary" class="site-main min-h-screen bg-gradient-to-b from-gray-50 to-white">
     <div class="container mx-auto px-4 py-16">

@@ -12,11 +12,14 @@
 
 get_header(); ?>
 
-<!-- Tailwind CSS Play CDNの読み込み（ページのhead部分に配置） -->
-<?php if (!wp_script_is('tailwind-cdn', 'enqueued')): ?>
+<!-- Tailwind CSS は header.php で読み込み済み -->
+<?php if (false): // 無効化 ?>
 <script src="https://cdn.tailwindcss.com"></script>
+<?php endif; ?>
 <script>
-    tailwind.config = {
+    // Tailwind config extension
+    if (typeof tailwind !== 'undefined' && tailwind.config) {
+        tailwind.config = {
         theme: {
             extend: {
                 animation: {
