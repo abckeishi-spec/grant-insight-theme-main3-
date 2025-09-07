@@ -85,6 +85,16 @@ function gi_load_phase1_improvements() {
     if (file_exists($theme_dir . '/responsive-accessibility.php')) {
         require_once $theme_dir . '/responsive-accessibility.php';
     }
+    
+    // 管理画面機能充実の読み込み（タスク15）
+    if (file_exists($theme_dir . '/admin-enhancements.php')) {
+        require_once $theme_dir . '/admin-enhancements.php';
+    }
+    
+    // システム最適化の読み込み（タスク16）
+    if (file_exists($theme_dir . '/system-optimization.php')) {
+        require_once $theme_dir . '/system-optimization.php';
+    }
 }
 add_action('after_setup_theme', 'gi_load_phase1_improvements', 5);
 
@@ -159,7 +169,9 @@ function gi_add_admin_notices() {
         'カテゴリ表示機能' => file_exists(get_template_directory() . '/category-display.php'),
         '検索・フィルター安定化' => file_exists(get_template_directory() . '/search-filter-stability.php'),
         'エラー・ガイダンス強化' => file_exists(get_template_directory() . '/error-guidance-system.php'),
-        'レスポンシブ・アクセシビリティ' => file_exists(get_template_directory() . '/responsive-accessibility.php')
+        'レスポンシブ・アクセシビリティ' => file_exists(get_template_directory() . '/responsive-accessibility.php'),
+        '管理画面機能充実' => file_exists(get_template_directory() . '/admin-enhancements.php'),
+        'システム最適化' => file_exists(get_template_directory() . '/system-optimization.php')
     );
     
     $all_loaded = !in_array(false, $improvements, true);
