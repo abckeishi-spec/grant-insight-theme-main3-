@@ -77,18 +77,15 @@ add_action('after_setup_theme', 'gi_setup');
 /**
  * コンテンツ幅設定
  */
-if (!function_exists('gi_content_width')) {
-    function gi_content_width() {
+function gi_content_width() {
     $GLOBALS['content_width'] = apply_filters('gi_content_width', 1200);
-}
 }
 add_action('after_setup_theme', 'gi_content_width', 0);
 
 /**
  * スクリプト・スタイルの読み込み（完全一元管理）
  */
-if (!function_exists('gi_enqueue_scripts')) {
-    function gi_enqueue_scripts() {
+function gi_enqueue_scripts() {
     // Tailwind CSS Play CDN（一元管理）
     wp_enqueue_script('tailwind-cdn', 'https://cdn.tailwindcss.com', array(), GI_THEME_VERSION, false);
     
@@ -297,14 +294,12 @@ if (!function_exists('gi_enqueue_scripts')) {
         wp_enqueue_script('gi-frontend-js', get_template_directory_uri() . '/assets/js/front-page.js', array('gi-main-js'), GI_THEME_VERSION, true);
     }
 }
-}
 add_action('wp_enqueue_scripts', 'gi_enqueue_scripts');
 
 /**
  * 管理画面用スクリプト
  */
-if (!function_exists('gi_admin_enqueue_scripts')) {
-    function gi_admin_enqueue_scripts($hook) {
+function gi_admin_enqueue_scripts($hook) {
     wp_enqueue_style('gi-admin-style', get_template_directory_uri() . '/css/admin.css', array(), GI_THEME_VERSION);
     wp_enqueue_script('gi-admin-js', get_template_directory_uri() . '/js/admin.js', array('jquery'), GI_THEME_VERSION, true);
     
@@ -312,7 +307,6 @@ if (!function_exists('gi_admin_enqueue_scripts')) {
         'ajax_url' => admin_url('admin-ajax.php'),
         'nonce' => wp_create_nonce('gi_admin_nonce')
     ));
-}
 }
 add_action('admin_enqueue_scripts', 'gi_admin_enqueue_scripts');
 
@@ -767,8 +761,7 @@ add_action('init', 'gi_insert_default_categories');
  */
 
 // 締切日のフォーマット関数
-if (!function_exists('gi_get_formatted_deadline')) {
-    function gi_get_formatted_deadline($post_id) {
+function gi_get_formatted_deadline($post_id) {
     $deadline = gi_safe_get_meta($post_id, 'deadline_date');
     if (!$deadline) {
         // 旧フィールドも確認
@@ -791,7 +784,6 @@ if (!function_exists('gi_get_formatted_deadline')) {
     }
     
     return $deadline;
-}
 }
 
 /**
@@ -861,8 +853,7 @@ add_action('save_post', 'gi_sync_grant_meta_on_save', 20, 3);
  */
 
 // 安全なメタ取得
-if (!function_exists('gi_safe_get_meta')) {
-    function gi_safe_get_meta($post_id, $key, $default = '') {
+function gi_safe_get_meta($post_id, $key, $default = '') {
     if (!$post_id || !is_numeric($post_id)) {
         return $default;
     }
@@ -882,26 +873,21 @@ if (!function_exists('gi_safe_get_meta')) {
     
     return $value;
 }
-}
 
 // 安全な属性出力
-if (!function_exists('gi_safe_attr')) {
-    function gi_safe_attr($value) {
+function gi_safe_attr($value) {
     if (is_array($value)) {
         $value = implode(' ', $value);
     }
     return esc_attr($value);
 }
-}
 
 // 安全なHTML出力
-if (!function_exists('gi_safe_escape')) {
-    function gi_safe_escape($value) {
+function gi_safe_escape($value) {
     if (is_array($value)) {
         return array_map('esc_html', $value);
     }
     return esc_html($value);
-}
 }
 
 // 安全な数値フォーマット
@@ -954,8 +940,7 @@ function gi_safe_json($data) {
 }
 
 // 安全なテキスト切り取り
-if (!function_exists('gi_safe_excerpt')) {
-    function gi_safe_excerpt($text, $length = 100, $more = '...') {
+function gi_safe_excerpt($text, $length = 100, $more = '...') {
     if (mb_strlen($text) <= $length) {
         return esc_html($text);
     }
@@ -969,32 +954,26 @@ if (!function_exists('gi_safe_excerpt')) {
     
     return esc_html($excerpt . $more);
 }
-}
 
 /**
  * 動的パス取得関数（完全版）
  */
 
 // アセットURL取得
-if (!function_exists('gi_get_asset_url')) {
-    function gi_get_asset_url($path) {
+function gi_get_asset_url($path) {
     $path = ltrim($path, '/');
     return get_template_directory_uri() . '/' . $path;
 }
-}
 
 // アップロードURL取得
-if (!function_exists('gi_get_upload_url')) {
-    function gi_get_upload_url($filename) {
+function gi_get_upload_url($filename) {
     $upload_dir = wp_upload_dir();
     $filename = ltrim($filename, '/');
     return $upload_dir['baseurl'] . '/' . $filename;
 }
-}
 
 // メディアURL取得（自動検出機能付き）
-if (!function_exists('gi_get_media_url')) {
-    function gi_get_media_url($filename, $fallback = true) {
+function gi_get_media_url($filename, $fallback = true) {
     if (empty($filename)) {
         return $fallback ? gi_get_asset_url('assets/images/placeholder.jpg') : '';
     }
@@ -1041,7 +1020,6 @@ if (!function_exists('gi_get_media_url')) {
     
     return '';
 }
-}
 
 // 動画URL取得
 function gi_get_video_url($filename, $fallback = true) {
@@ -1059,8 +1037,7 @@ function gi_get_video_url($filename, $fallback = true) {
 }
 
 // ロゴURL取得
-if (!function_exists('gi_get_logo_url')) {
-    function gi_get_logo_url($fallback = true) {
+function gi_get_logo_url($fallback = true) {
     $custom_logo_id = get_theme_mod('custom_logo');
     if ($custom_logo_id) {
         return wp_get_attachment_image_url($custom_logo_id, 'full');
@@ -1077,13 +1054,11 @@ if (!function_exists('gi_get_logo_url')) {
     
     return '';
 }
-}
 
 /**
  * 補助ヘルパー: 金額（円）を万円表示用に整形
  */
-if (!function_exists('gi_format_amount_man')) {
-    function gi_format_amount_man($amount_yen, $amount_text = '') {
+function gi_format_amount_man($amount_yen, $amount_text = '') {
     $yen = is_numeric($amount_yen) ? intval($amount_yen) : 0;
     if ($yen > 0) {
         return gi_safe_number_format(intval($yen / 10000));
@@ -1097,7 +1072,6 @@ if (!function_exists('gi_format_amount_man')) {
         }
     }
     return '0';
-}
 }
 
 /**
@@ -1119,8 +1093,7 @@ function gi_map_application_status_ui($app_status) {
 /**
  * 【修正】AJAX - 助成金読み込み処理（都道府県・完全対応版）
  */
-if (!function_exists('gi_ajax_load_grants')) {
-    function gi_ajax_load_grants() {
+function gi_ajax_load_grants() {
     if (!wp_verify_nonce($_POST['nonce'] ?? '', 'gi_ajax_nonce') && !wp_verify_nonce($_POST['nonce'] ?? '', 'grant_insight_search_nonce')) {
         wp_send_json_error('セキュリティチェックに失敗しました');
     }
@@ -1308,20 +1281,14 @@ if (!function_exists('gi_ajax_load_grants')) {
         'view' => $view
     ));
 }
-}
-if (function_exists('gi_ajax_load_grants')) {
-    add_action('wp_ajax_gi_load_grants', 'gi_ajax_load_grants');
-}
-if (function_exists('gi_ajax_load_grants')) {
-    add_action('wp_ajax_nopriv_gi_load_grants', 'gi_ajax_load_grants');
-}
+add_action('wp_ajax_gi_load_grants', 'gi_ajax_load_grants');
+add_action('wp_ajax_nopriv_gi_load_grants', 'gi_ajax_load_grants');
 
 // 続く...（残りのAJAX関数とユーティリティ関数）
 // 
 // // === Missing AJAX endpoints implemented ===
 // 1) Search suggestions
-if (!function_exists('gi_ajax_get_search_suggestions')) {
-    function gi_ajax_get_search_suggestions() {
+function gi_ajax_get_search_suggestions() {
     if (!wp_verify_nonce($_POST['nonce'] ?? '', 'gi_ajax_nonce')) {
         wp_send_json_error('Invalid nonce');
     }
@@ -1345,17 +1312,11 @@ if (!function_exists('gi_ajax_get_search_suggestions')) {
     }
     wp_send_json_success($suggestions);
 }
-}
-if (function_exists('gi_ajax_get_search_suggestions')) {
-    add_action('wp_ajax_get_search_suggestions', 'gi_ajax_get_search_suggestions');
-}
-if (function_exists('gi_ajax_get_search_suggestions')) {
-    add_action('wp_ajax_nopriv_get_search_suggestions', 'gi_ajax_get_search_suggestions');
-}
+add_action('wp_ajax_get_search_suggestions', 'gi_ajax_get_search_suggestions');
+add_action('wp_ajax_nopriv_get_search_suggestions', 'gi_ajax_get_search_suggestions');
 
 // 2) Advanced search (simple wrapper around gi_search with HTML list)
-if (!function_exists('gi_ajax_advanced_search')) {
-    function gi_ajax_advanced_search() {
+function gi_ajax_advanced_search() {
     if (!wp_verify_nonce($_POST['nonce'] ?? '', 'gi_ajax_nonce')) {
         wp_send_json_error('Invalid nonce');
     }
@@ -1418,17 +1379,11 @@ if (!function_exists('gi_ajax_advanced_search')) {
         'count' => $q->found_posts
     ));
 }
-}
-if (function_exists('gi_ajax_advanced_search')) {
-    add_action('wp_ajax_advanced_search', 'gi_ajax_advanced_search');
-}
-if (function_exists('gi_ajax_advanced_search')) {
-    add_action('wp_ajax_nopriv_advanced_search', 'gi_ajax_advanced_search');
-}
+add_action('wp_ajax_advanced_search', 'gi_ajax_advanced_search');
+add_action('wp_ajax_nopriv_advanced_search', 'gi_ajax_advanced_search');
 
 // 2.5) Grant Insight top page search (section-search.php)
-if (!function_exists('gi_ajax_grant_insight_search')) {
-    function gi_ajax_grant_insight_search() {
+function gi_ajax_grant_insight_search() {
     // Verify nonce specific to front-page search section
     $nonce = isset($_POST['nonce']) ? sanitize_text_field($_POST['nonce']) : '';
     if (!wp_verify_nonce($nonce, 'grant_insight_search_nonce')) {
@@ -1578,13 +1533,8 @@ if (!function_exists('gi_ajax_grant_insight_search')) {
 
     wp_send_json_success($response);
 }
-}
-if (function_exists('gi_ajax_grant_insight_search')) {
-    add_action('wp_ajax_grant_insight_search', 'gi_ajax_grant_insight_search');
-}
-if (function_exists('gi_ajax_grant_insight_search')) {
-    add_action('wp_ajax_nopriv_grant_insight_search', 'gi_ajax_grant_insight_search');
-}
+add_action('wp_ajax_grant_insight_search', 'gi_ajax_grant_insight_search');
+add_action('wp_ajax_nopriv_grant_insight_search', 'gi_ajax_grant_insight_search');
 
 // 2.6) Export search results as CSV
 function gi_ajax_grant_insight_export_results() {
@@ -1741,8 +1691,7 @@ add_action('wp_ajax_nopriv_get_related_grants', 'gi_ajax_get_related_grants');
 /**
  * お気に入り機能（強化版）
  */
-if (!function_exists('gi_ajax_toggle_favorite')) {
-    function gi_ajax_toggle_favorite() {
+function gi_ajax_toggle_favorite() {
     if (!wp_verify_nonce($_POST['nonce'] ?? '', 'gi_ajax_nonce') && !wp_verify_nonce($_POST['nonce'] ?? '', 'grant_insight_search_nonce')) {
         wp_send_json_error('セキュリティチェックに失敗しました');
     }
@@ -1791,27 +1740,14 @@ if (!function_exists('gi_ajax_toggle_favorite')) {
         'message' => $action === 'added' ? 'お気に入りに追加しました' : 'お気に入りから削除しました'
     ));
 }
-}
-if (function_exists('gi_ajax_toggle_favorite')) {
-    add_action('wp_ajax_gi_toggle_favorite', 'gi_ajax_toggle_favorite');
-}
-if (function_exists('gi_ajax_toggle_favorite')) {
-    add_action('wp_ajax_nopriv_gi_toggle_favorite', 'gi_ajax_toggle_favorite');
-}
+add_action('wp_ajax_gi_toggle_favorite', 'gi_ajax_toggle_favorite');
+add_action('wp_ajax_nopriv_gi_toggle_favorite', 'gi_ajax_toggle_favorite');
 // Alias for front-page.js 'toggle_favorite'
-if (function_exists('gi_ajax_toggle_favorite')) {
-    add_action('wp_ajax_toggle_favorite', 'gi_ajax_toggle_favorite');
-}
-if (function_exists('gi_ajax_toggle_favorite')) {
-    add_action('wp_ajax_nopriv_toggle_favorite', 'gi_ajax_toggle_favorite');
-}
+add_action('wp_ajax_toggle_favorite', 'gi_ajax_toggle_favorite');
+add_action('wp_ajax_nopriv_toggle_favorite', 'gi_ajax_toggle_favorite');
 // Alias for section-search.php favorite action
-if (function_exists('gi_ajax_toggle_favorite')) {
-    add_action('wp_ajax_grant_insight_toggle_favorite', 'gi_ajax_toggle_favorite');
-}
-if (function_exists('gi_ajax_toggle_favorite')) {
-    add_action('wp_ajax_nopriv_grant_insight_toggle_favorite', 'gi_ajax_toggle_favorite');
-}
+add_action('wp_ajax_grant_insight_toggle_favorite', 'gi_ajax_toggle_favorite');
+add_action('wp_ajax_nopriv_grant_insight_toggle_favorite', 'gi_ajax_toggle_favorite');
 
 /**
  * お気に入り一覧取得
@@ -2636,8 +2572,7 @@ add_action('widgets_init', 'gi_widgets_init');
 /**
  * カスタマイザー設定（強化版）
  */
-if (!function_exists('gi_customize_register')) {
-    function gi_customize_register($wp_customize) {
+function gi_customize_register($wp_customize) {
     // ヒーローセクション設定
     $wp_customize->add_section('gi_hero_section', array(
         'title' => 'ヒーローセクション',
@@ -2733,7 +2668,6 @@ if (!function_exists('gi_customize_register')) {
         'label' => 'プライマリカラー',
         'section' => 'gi_site_settings'
     )));
-}
 }
 add_action('customize_register', 'gi_customize_register');
 
