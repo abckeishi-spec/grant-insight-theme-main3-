@@ -1,0 +1,91 @@
+/* Grant Insight Theme - Main CSS File */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ==========================================================================
+   WordPress Core Styles & Custom Base Styles
+   ========================================================================== */
+@layer base {
+  body {
+    @apply font-noto leading-relaxed text-gray-800 bg-gray-50;
+  }
+  
+  /* WordPress管理バー対応 */
+  .admin-bar .fixed {
+    @apply top-8;
+  }
+  
+  .admin-bar .fixed-top-0 {
+    @apply top-8;
+  }
+}
+
+/* ==========================================================================
+   Grant Insight Perfect Theme - Core Component Styles
+   ========================================================================== */
+@layer components {
+  /* メインヘッダー */
+  .site-header {
+    @apply bg-white shadow-lg border-b-2 border-emerald-500 sticky top-0 z-50;
+  }
+  
+  /* ボタンスタイル */
+  .btn {
+    @apply inline-flex items-center justify-center px-6 py-3 font-bold rounded-lg transition-all duration-300;
+  }
+  
+  .btn-primary {
+    @apply btn bg-emerald-500 hover:bg-emerald-600 text-white;
+  }
+  
+  .btn-secondary {
+    @apply btn bg-gray-200 hover:bg-gray-300 text-gray-800;
+  }
+  
+  /* カードスタイル */
+  .card {
+    @apply bg-white rounded-lg shadow-card hover:shadow-card-hover transition-shadow duration-300;
+  }
+  
+  .card-header {
+    @apply p-6 border-b border-gray-200;
+  }
+  
+  .card-body {
+    @apply p-6;
+  }
+  
+  .card-footer {
+    @apply p-6 border-t border-gray-200 bg-gray-50;
+  }
+  
+  /* グラデーション背景 */
+  .bg-gradient-emerald {
+    @apply bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700;
+  }
+}
+
+/* ==========================================================================
+   Custom Utilities
+   ========================================================================== */
+@layer utilities {
+  /* アニメーション遅延 */
+  .animation-delay-200 {
+    animation-delay: 200ms;
+  }
+  
+  .animation-delay-400 {
+    animation-delay: 400ms;
+  }
+  
+  .animation-delay-600 {
+    animation-delay: 600ms;
+  }
+  
+  /* レスポンシブテキスト */
+  .text-responsive {
+    @apply text-sm md:text-base lg:text-lg;
+  }
+}
+
