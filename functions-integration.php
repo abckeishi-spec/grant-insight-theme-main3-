@@ -55,6 +55,21 @@ function gi_load_phase1_improvements() {
     if (file_exists($theme_dir . '/icon-management.php')) {
         require_once $theme_dir . '/icon-management.php';
     }
+    
+    // データ検証・統一機能の読み込み（タスク9）
+    if (file_exists($theme_dir . '/data-validation.php')) {
+        require_once $theme_dir . '/data-validation.php';
+    }
+    
+    // 個人向けカテゴリ機能の読み込み（タスク10）
+    if (file_exists($theme_dir . '/individual-categories.php')) {
+        require_once $theme_dir . '/individual-categories.php';
+    }
+    
+    // カテゴリ表示機能の読み込み（タスク11）
+    if (file_exists($theme_dir . '/category-display.php')) {
+        require_once $theme_dir . '/category-display.php';
+    }
 }
 add_action('after_setup_theme', 'gi_load_phase1_improvements', 5);
 
@@ -121,7 +136,12 @@ function gi_add_admin_notices() {
         'セキュリティ・エラーハンドリング統一化' => file_exists(get_template_directory() . '/ajax-handlers-improved.php'),
         '件数表示の動的化' => file_exists(get_template_directory() . '/grant-counts.php'),
         'AI診断機能' => file_exists(get_template_directory() . '/ai-diagnosis.php'),
-        '改善版ヘルパー関数' => file_exists(get_template_directory() . '/helpers-improved.php')
+        '改善版ヘルパー関数' => file_exists(get_template_directory() . '/helpers-improved.php'),
+        'カスタマイザー設定' => file_exists(get_template_directory() . '/customizer-settings.php'),
+        'アイコン管理' => file_exists(get_template_directory() . '/icon-management.php'),
+        'データ検証・統一' => file_exists(get_template_directory() . '/data-validation.php'),
+        '個人向けカテゴリ' => file_exists(get_template_directory() . '/individual-categories.php'),
+        'カテゴリ表示機能' => file_exists(get_template_directory() . '/category-display.php')
     );
     
     $all_loaded = !in_array(false, $improvements, true);
