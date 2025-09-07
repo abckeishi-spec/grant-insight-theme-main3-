@@ -18,8 +18,7 @@ if (!defined('ABSPATH')) {
  * 14.1 レスポンシブ改善
  * Responsive design improvements
  */
-if (!function_exists('gi_responsive_styles')) {
-    function gi_responsive_styles() {
+function gi_responsive_styles() {
     ?>
     <style>
         /* Base responsive utilities */
@@ -289,7 +288,6 @@ if (!function_exists('gi_responsive_styles')) {
         }
     </style>
     <?php
-}
 }
 add_action('wp_head', 'gi_responsive_styles', 20);
 
@@ -926,8 +924,7 @@ add_action('init', array('GI_Accessibility', 'init'));
 /**
  * Accessibility settings panel
  */
-if (!function_exists('gi_accessibility_settings_panel')) {
-    function gi_accessibility_settings_panel() {
+function gi_accessibility_settings_panel() {
     ?>
     <div id="accessibility-panel" class="accessibility-panel" style="display: none;">
         <h3>アクセシビリティ設定</h3>
@@ -1170,6 +1167,5 @@ if (!function_exists('gi_accessibility_settings_panel')) {
     });
     </script>
     <?php
-}
 }
 add_action('wp_footer', 'gi_accessibility_settings_panel');

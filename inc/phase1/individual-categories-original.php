@@ -18,8 +18,7 @@ if (!defined('ABSPATH')) {
  * 10.1 個人向けフラグACFフィールド追加
  * Register ACF field for individual/personal targeting
  */
-if (!function_exists('gi_register_individual_target_field')) {
-    function gi_register_individual_target_field() {
+function gi_register_individual_target_field() {
     if (!function_exists('acf_add_local_field_group')) {
         return;
     }
@@ -68,15 +67,13 @@ if (!function_exists('gi_register_individual_target_field')) {
         'description' => '個人向け補助金の識別フラグ',
     ));
 }
-}
 add_action('acf/init', 'gi_register_individual_target_field');
 
 /**
  * 10.2 個人向けカテゴリー作成
  * Create individual/personal categories
  */
-if (!function_exists('gi_create_individual_categories')) {
-    function gi_create_individual_categories() {
+function gi_create_individual_categories() {
     // Define individual categories
     $individual_categories = array(
         '個人事業主' => array(
@@ -119,15 +116,13 @@ if (!function_exists('gi_create_individual_categories')) {
         }
     }
 }
-}
 add_action('init', 'gi_create_individual_categories', 20);
 
 /**
  * 10.3 検索フィルター追加
  * Add individual filter to search functionality
  */
-if (!function_exists('gi_add_individual_search_filter')) {
-    function gi_add_individual_search_filter($query_args, $filters) {
+function gi_add_individual_search_filter($query_args, $filters) {
     // Check if individual filter is set
     if (isset($filters['individual_only']) && $filters['individual_only']) {
         // Add meta query for individual targeting
@@ -144,14 +139,12 @@ if (!function_exists('gi_add_individual_search_filter')) {
     
     return $query_args;
 }
-}
 add_filter('gi_grant_search_query_args', 'gi_add_individual_search_filter', 10, 2);
 
 /**
  * Add individual filter to AJAX search handler
  */
-if (!function_exists('gi_ajax_filter_individual_grants')) {
-    function gi_ajax_filter_individual_grants() {
+function gi_ajax_filter_individual_grants() {
     // Verify nonce
     if (!check_ajax_referer('gi_ajax_nonce', 'nonce', false)) {
         wp_send_json_error(array('message' => 'セキュリティチェックに失敗しました。'));
@@ -213,7 +206,6 @@ if (!function_exists('gi_ajax_filter_individual_grants')) {
         wp_send_json_error(array('message' => 'フィルタリング中にエラーが発生しました。'));
     }
 }
-}
 add_action('wp_ajax_gi_filter_individual_grants', 'gi_ajax_filter_individual_grants');
 add_action('wp_ajax_nopriv_gi_filter_individual_grants', 'gi_ajax_filter_individual_grants');
 
@@ -221,8 +213,7 @@ add_action('wp_ajax_nopriv_gi_filter_individual_grants', 'gi_ajax_filter_individ
  * 10.4 表示フラグ追加
  * Add individual badge to grant display
  */
-if (!function_exists('gi_display_individual_badge')) {
-    function gi_display_individual_badge($post_id = null) {
+function gi_display_individual_badge($post_id = null) {
     if (!$post_id) {
         $post_id = get_the_ID();
     }
@@ -238,13 +229,11 @@ if (!function_exists('gi_display_individual_badge')) {
         echo '</span>';
     }
 }
-}
 
 /**
  * Add CSS for individual badge
  */
-if (!function_exists('gi_individual_badge_styles')) {
-    function gi_individual_badge_styles() {
+function gi_individual_badge_styles() {
     ?>
     <style>
         .individual-badge {
@@ -306,15 +295,13 @@ if (!function_exists('gi_individual_badge_styles')) {
     </style>
     <?php
 }
-}
 add_action('wp_head', 'gi_individual_badge_styles');
 
 /**
  * 10.5 検索フォームに個人向けフィルター追加
  * Add individual filter toggle to search form
  */
-if (!function_exists('gi_add_individual_filter_to_search_form')) {
-    function gi_add_individual_filter_to_search_form() {
+function gi_add_individual_filter_to_search_form() {
     ?>
     <div class="individual-filter-container mb-4">
         <label class="individual-filter-toggle" id="individual-filter-toggle">
@@ -345,27 +332,23 @@ if (!function_exists('gi_add_individual_filter_to_search_form')) {
     </script>
     <?php
 }
-}
 add_action('gi_search_form_filters', 'gi_add_individual_filter_to_search_form');
 
 /**
  * Helper function to check if a grant is for individuals
  */
-if (!function_exists('gi_is_individual_grant')) {
-    function gi_is_individual_grant($post_id = null) {
+function gi_is_individual_grant($post_id = null) {
     if (!$post_id) {
         $post_id = get_the_ID();
     }
     
     return (bool) get_field('target_individual', $post_id);
 }
-}
 
 /**
  * Get all individual categories
  */
-if (!function_exists('gi_get_individual_categories')) {
-    function gi_get_individual_categories() {
+function gi_get_individual_categories() {
     $args = array(
         'taxonomy' => 'grant_category',
         'hide_empty' => false,
@@ -380,13 +363,11 @@ if (!function_exists('gi_get_individual_categories')) {
     
     return get_terms($args);
 }
-}
 
 /**
  * Display individual category selector
  */
-if (!function_exists('gi_display_individual_category_selector')) {
-    function gi_display_individual_category_selector($post_id = null) {
+function gi_display_individual_category_selector($post_id = null) {
     if (!$post_id) {
         $post_id = get_the_ID();
     }
@@ -420,13 +401,11 @@ if (!function_exists('gi_display_individual_category_selector')) {
         echo '</div>';
     }
 }
-}
 
 /**
  * Auto-assign individual categories based on content
  */
-if (!function_exists('gi_auto_assign_individual_categories')) {
-    function gi_auto_assign_individual_categories($post_id) {
+function gi_auto_assign_individual_categories($post_id) {
     // Check if it's a grant post type
     if (get_post_type($post_id) !== 'grant') {
         return;
@@ -473,14 +452,12 @@ if (!function_exists('gi_auto_assign_individual_categories')) {
         wp_set_post_terms($post_id, $categories_to_assign, 'grant_category', true);
     }
 }
-}
 add_action('save_post_grant', 'gi_auto_assign_individual_categories', 20);
 
 /**
  * Format grant data for AJAX responses
  */
-if (!function_exists('gi_format_grant_data')) {
-    function gi_format_grant_data($post_id) {
+function gi_format_grant_data($post_id) {
     $grant_data = array(
         'id' => $post_id,
         'title' => get_the_title($post_id),
@@ -508,27 +485,23 @@ if (!function_exists('gi_format_grant_data')) {
     
     return $grant_data;
 }
-}
 
 /**
  * Add individual grants count to dashboard
  */
-if (!function_exists('gi_add_individual_grants_dashboard_widget')) {
-    function gi_add_individual_grants_dashboard_widget() {
+function gi_add_individual_grants_dashboard_widget() {
     wp_add_dashboard_widget(
         'individual_grants_stats',
         '個人向け補助金統計',
         'gi_display_individual_grants_stats'
     );
 }
-}
 add_action('wp_dashboard_setup', 'gi_add_individual_grants_dashboard_widget');
 
 /**
  * Display individual grants statistics
  */
-if (!function_exists('gi_display_individual_grants_stats')) {
-    function gi_display_individual_grants_stats() {
+function gi_display_individual_grants_stats() {
     // Count individual grants
     $args = array(
         'post_type' => 'grant',
@@ -625,13 +598,11 @@ if (!function_exists('gi_display_individual_grants_stats')) {
     </style>
     <?php
 }
-}
 
 /**
  * Add admin filter for individual grants
  */
-if (!function_exists('gi_add_admin_individual_filter')) {
-    function gi_add_admin_individual_filter() {
+function gi_add_admin_individual_filter() {
     global $typenow;
     
     if ($typenow !== 'grant') {
@@ -648,14 +619,12 @@ if (!function_exists('gi_add_admin_individual_filter')) {
     </select>
     <?php
 }
-}
 add_action('restrict_manage_posts', 'gi_add_admin_individual_filter');
 
 /**
  * Filter admin posts list by individual status
  */
-if (!function_exists('gi_filter_admin_posts_by_individual')) {
-    function gi_filter_admin_posts_by_individual($query) {
+function gi_filter_admin_posts_by_individual($query) {
     global $pagenow, $typenow;
     
     if ($pagenow !== 'edit.php' || $typenow !== 'grant' || !is_admin()) {
@@ -673,7 +642,6 @@ if (!function_exists('gi_filter_admin_posts_by_individual')) {
             )
         ));
     }
-}
 }
 add_action('pre_get_posts', 'gi_filter_admin_posts_by_individual');
 

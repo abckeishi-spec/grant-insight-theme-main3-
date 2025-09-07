@@ -12,8 +12,7 @@ if (!defined('ABSPATH')) {
 /**
  * カスタマイザーに設定を追加
  */
-if (!function_exists('gi_customize_register')) {
-    function gi_customize_register($wp_customize) {
+function gi_customize_register($wp_customize) {
     
     // ===========================================
     // タスク4: ヘッダー・フッター色設定
@@ -340,24 +339,20 @@ if (!function_exists('gi_customize_register')) {
         )));
     }
 }
-}
 add_action('customize_register', 'gi_customize_register');
 
 /**
  * ロゴ位置のサニタイズ
  */
-if (!function_exists('gi_sanitize_logo_position')) {
-    function gi_sanitize_logo_position($input) {
+function gi_sanitize_logo_position($input) {
     $valid = array('left', 'center', 'right');
     return in_array($input, $valid, true) ? $input : 'left';
-}
 }
 
 /**
  * カスタマイザーCSS出力
  */
-if (!function_exists('gi_customize_css')) {
-    function gi_customize_css() {
+function gi_customize_css() {
     // キャッシュ確認
     $cached_css = get_transient('gi_customizer_css');
     if ($cached_css !== false && !is_customize_preview()) {
@@ -522,14 +517,12 @@ if (!function_exists('gi_customize_css')) {
     
     echo $css;
 }
-}
 add_action('wp_head', 'gi_customize_css', 100);
 
 /**
  * 色を暗くする関数
  */
-if (!function_exists('gi_darken_color')) {
-    function gi_darken_color($hex, $percent) {
+function gi_darken_color($hex, $percent) {
     $hex = ltrim($hex, '#');
     $r = hexdec(substr($hex, 0, 2));
     $g = hexdec(substr($hex, 2, 2));
@@ -541,13 +534,11 @@ if (!function_exists('gi_darken_color')) {
     
     return '#' . sprintf('%02x%02x%02x', $r, $g, $b);
 }
-}
 
 /**
  * カスタマイザーのライブプレビュー用JavaScript
  */
-if (!function_exists('gi_customize_preview_js')) {
-    function gi_customize_preview_js() {
+function gi_customize_preview_js() {
     wp_enqueue_script(
         'gi-customizer-preview',
         get_template_directory_uri() . '/assets/js/customizer-preview.js',
@@ -556,15 +547,12 @@ if (!function_exists('gi_customize_preview_js')) {
         true
     );
 }
-}
 add_action('customize_preview_init', 'gi_customize_preview_js');
 
 /**
  * カスタマイザーCSScache削除
  */
-if (!function_exists('gi_clear_customizer_cache')) {
-    function gi_clear_customizer_cache() {
+function gi_clear_customizer_cache() {
     delete_transient('gi_customizer_css');
-}
 }
 add_action('customize_save_after', 'gi_clear_customizer_cache');

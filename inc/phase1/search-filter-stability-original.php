@@ -19,8 +19,7 @@ if (!defined('ABSPATH')) {
  * 12.1 検索結果0件時改善
  * Handle zero search results with suggestions
  */
-if (!function_exists('gi_handle_zero_search_results')) {
-    function gi_handle_zero_search_results($query_vars) {
+function gi_handle_zero_search_results($query_vars) {
     $suggestions = array(
         'similar_categories' => array(),
         'relaxed_conditions' => array(),
@@ -40,13 +39,11 @@ if (!function_exists('gi_handle_zero_search_results')) {
     
     return $suggestions;
 }
-}
 
 /**
  * Get similar categories based on search term
  */
-if (!function_exists('gi_get_similar_categories')) {
-    function gi_get_similar_categories($search_term) {
+function gi_get_similar_categories($search_term) {
     $all_categories = get_terms(array(
         'taxonomy' => 'grant_category',
         'hide_empty' => false
@@ -86,13 +83,11 @@ if (!function_exists('gi_get_similar_categories')) {
     
     return array_slice($similar, 0, 5);
 }
-}
 
 /**
  * Suggest relaxed search conditions
  */
-if (!function_exists('gi_suggest_relaxed_conditions')) {
-    function gi_suggest_relaxed_conditions($query_vars) {
+function gi_suggest_relaxed_conditions($query_vars) {
     $suggestions = array();
     
     // If multiple filters are applied, suggest removing some
@@ -137,13 +132,11 @@ if (!function_exists('gi_suggest_relaxed_conditions')) {
     
     return $suggestions;
 }
-}
 
 /**
  * Get popular grants
  */
-if (!function_exists('gi_get_popular_grants')) {
-    function gi_get_popular_grants($limit = 5) {
+function gi_get_popular_grants($limit = 5) {
     $cache_key = 'gi_popular_grants_' . $limit;
     $popular_grants = get_transient($cache_key);
     
@@ -181,14 +174,12 @@ if (!function_exists('gi_get_popular_grants')) {
     
     return $popular_grants;
 }
-}
 
 /**
  * 12.2 フィルター条件保存
  * Save and restore filter conditions
  */
-if (!function_exists('gi_save_filter_conditions')) {
-    function gi_save_filter_conditions() {
+function gi_save_filter_conditions() {
     ?>
     <script>
     (function() {
@@ -303,14 +294,12 @@ if (!function_exists('gi_save_filter_conditions')) {
     </script>
     <?php
 }
-}
 add_action('wp_footer', 'gi_save_filter_conditions');
 
 /**
  * Save user preferences for logged-in users
  */
-if (!function_exists('gi_save_user_search_preferences')) {
-    function gi_save_user_search_preferences($user_id, $filters) {
+function gi_save_user_search_preferences($user_id, $filters) {
     if (!$user_id) {
         return false;
     }
@@ -337,13 +326,11 @@ if (!function_exists('gi_save_user_search_preferences')) {
     
     return true;
 }
-}
 
 /**
  * AJAX handler for saving user preferences
  */
-if (!function_exists('gi_ajax_save_search_preferences')) {
-    function gi_ajax_save_search_preferences() {
+function gi_ajax_save_search_preferences() {
     // Verify nonce
     if (!check_ajax_referer('gi_ajax_nonce', 'nonce', false)) {
         wp_send_json_error(array('message' => 'セキュリティチェックに失敗しました。'));
@@ -372,15 +359,13 @@ if (!function_exists('gi_ajax_save_search_preferences')) {
         wp_send_json_error(array('message' => '保存に失敗しました。'));
     }
 }
-}
 add_action('wp_ajax_gi_save_search_preferences', 'gi_ajax_save_search_preferences');
 
 /**
  * 12.3 オートコンプリート強化
  * Enhanced autocomplete functionality
  */
-if (!function_exists('gi_enhanced_autocomplete')) {
-    function gi_enhanced_autocomplete() {
+function gi_enhanced_autocomplete() {
     ?>
     <script>
     (function() {
@@ -619,14 +604,12 @@ if (!function_exists('gi_enhanced_autocomplete')) {
     </script>
     <?php
 }
-}
 add_action('wp_footer', 'gi_enhanced_autocomplete');
 
 /**
  * AJAX handler for enhanced autocomplete
  */
-if (!function_exists('gi_ajax_enhanced_autocomplete')) {
-    function gi_ajax_enhanced_autocomplete() {
+function gi_ajax_enhanced_autocomplete() {
     // Verify nonce
     if (!check_ajax_referer('gi_ajax_nonce', 'nonce', false)) {
         wp_send_json_error(array('message' => 'セキュリティチェックに失敗しました。'));
@@ -710,15 +693,13 @@ if (!function_exists('gi_ajax_enhanced_autocomplete')) {
     
     wp_send_json_success($suggestions);
 }
-}
 add_action('wp_ajax_gi_enhanced_autocomplete', 'gi_ajax_enhanced_autocomplete');
 add_action('wp_ajax_nopriv_gi_enhanced_autocomplete', 'gi_ajax_enhanced_autocomplete');
 
 /**
  * Display zero results message with suggestions
  */
-if (!function_exists('gi_display_zero_results_suggestions')) {
-    function gi_display_zero_results_suggestions($search_query = '') {
+function gi_display_zero_results_suggestions($search_query = '') {
     $suggestions = gi_handle_zero_search_results(array('s' => $search_query));
     ?>
     <div class="zero-results-container">
@@ -804,13 +785,11 @@ if (!function_exists('gi_display_zero_results_suggestions')) {
     </style>
     <?php
 }
-}
 
 /**
  * Add search history widget for logged-in users
  */
-if (!function_exists('gi_search_history_widget')) {
-    function gi_search_history_widget() {
+function gi_search_history_widget() {
     if (!is_user_logged_in()) {
         return;
     }
@@ -908,6 +887,5 @@ if (!function_exists('gi_search_history_widget')) {
         }
     </style>
     <?php
-}
 }
 add_action('gi_search_sidebar', 'gi_search_history_widget');

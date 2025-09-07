@@ -17,8 +17,7 @@ if (!defined('ABSPATH')) {
  * @param bool $use_cache キャッシュを使用するか
  * @return int 助成金件数
  */
-if (!function_exists('gi_get_category_count')) {
-    function gi_get_category_count($category_slug, $use_cache = true) {
+function gi_get_category_count($category_slug, $use_cache = true) {
     try {
         if (empty($category_slug)) {
             return 0;
@@ -80,7 +79,6 @@ if (!function_exists('gi_get_category_count')) {
         return 0;
     }
 }
-}
 
 /**
  * 都道府県別助成金件数を取得
@@ -89,8 +87,7 @@ if (!function_exists('gi_get_category_count')) {
  * @param bool $use_cache キャッシュを使用するか
  * @return int 助成金件数
  */
-if (!function_exists('gi_get_prefecture_count')) {
-    function gi_get_prefecture_count($prefecture_slug, $use_cache = true) {
+function gi_get_prefecture_count($prefecture_slug, $use_cache = true) {
     try {
         if (empty($prefecture_slug)) {
             return 0;
@@ -152,7 +149,6 @@ if (!function_exists('gi_get_prefecture_count')) {
         return 0;
     }
 }
-}
 
 /**
  * 全体の助成金件数を取得
@@ -160,8 +156,7 @@ if (!function_exists('gi_get_prefecture_count')) {
  * @param bool $use_cache キャッシュを使用するか
  * @return int 助成金件数
  */
-if (!function_exists('gi_get_total_grant_count')) {
-    function gi_get_total_grant_count($use_cache = true) {
+function gi_get_total_grant_count($use_cache = true) {
     try {
         // キャッシュキー
         $cache_key = 'gi_total_grant_count';
@@ -201,7 +196,6 @@ if (!function_exists('gi_get_total_grant_count')) {
         return 0;
     }
 }
-}
 
 /**
  * 複数カテゴリーの件数を一括取得
@@ -209,8 +203,7 @@ if (!function_exists('gi_get_total_grant_count')) {
  * @param array $category_slugs カテゴリースラッグの配列
  * @return array カテゴリースラッグ => 件数の連想配列
  */
-if (!function_exists('gi_get_category_counts_bulk')) {
-    function gi_get_category_counts_bulk($category_slugs) {
+function gi_get_category_counts_bulk($category_slugs) {
     $counts = array();
     
     if (!is_array($category_slugs) || empty($category_slugs)) {
@@ -223,7 +216,6 @@ if (!function_exists('gi_get_category_counts_bulk')) {
     
     return $counts;
 }
-}
 
 /**
  * 複数都道府県の件数を一括取得
@@ -231,8 +223,7 @@ if (!function_exists('gi_get_category_counts_bulk')) {
  * @param array $prefecture_slugs 都道府県スラッグの配列
  * @return array 都道府県スラッグ => 件数の連想配列
  */
-if (!function_exists('gi_get_prefecture_counts_bulk')) {
-    function gi_get_prefecture_counts_bulk($prefecture_slugs) {
+function gi_get_prefecture_counts_bulk($prefecture_slugs) {
     $counts = array();
     
     if (!is_array($prefecture_slugs) || empty($prefecture_slugs)) {
@@ -245,14 +236,12 @@ if (!function_exists('gi_get_prefecture_counts_bulk')) {
     
     return $counts;
 }
-}
 
 /**
  * キャッシュをクリア
  * 助成金が追加・更新・削除された時に呼び出される
  */
-if (!function_exists('gi_clear_grant_counts_cache')) {
-    function gi_clear_grant_counts_cache() {
+function gi_clear_grant_counts_cache() {
     // 全てのカテゴリーを取得
     $categories = get_terms(array(
         'taxonomy' => 'grant_category',
@@ -282,7 +271,6 @@ if (!function_exists('gi_clear_grant_counts_cache')) {
     // 全体件数のキャッシュもクリア
     wp_cache_delete('gi_total_grant_count', 'grant_counts');
 }
-}
 
 // 助成金の保存・削除時にキャッシュをクリア
 add_action('save_post_grant', 'gi_clear_grant_counts_cache');
@@ -306,8 +294,7 @@ add_action('transition_post_status', function($new_status, $old_status, $post) {
  * @param string $format 表示フォーマット（%d件）
  * @return string フォーマット済み文字列
  */
-if (!function_exists('gi_display_grant_count')) {
-    function gi_display_grant_count($type, $slug, $format = '%d件') {
+function gi_display_grant_count($type, $slug, $format = '%d件') {
     $count = 0;
     
     switch ($type) {
@@ -329,7 +316,6 @@ if (!function_exists('gi_display_grant_count')) {
     
     return sprintf('<span class="grant-count">' . $format . '</span>', number_format($count));
 }
-}
 
 /**
  * ショートコード登録
@@ -337,8 +323,7 @@ if (!function_exists('gi_display_grant_count')) {
  * [grant_count type="prefecture" slug="tokyo"]
  * [grant_count type="total"]
  */
-if (!function_exists('gi_grant_count_shortcode')) {
-    function gi_grant_count_shortcode($atts) {
+function gi_grant_count_shortcode($atts) {
     $atts = shortcode_atts(array(
         'type' => 'total',
         'slug' => '',
@@ -347,14 +332,12 @@ if (!function_exists('gi_grant_count_shortcode')) {
     
     return gi_display_grant_count($atts['type'], $atts['slug'], $atts['format']);
 }
-}
 add_shortcode('grant_count', 'gi_grant_count_shortcode');
 
 /**
  * AJAX エンドポイント - 件数取得
  */
-if (!function_exists('gi_ajax_get_grant_counts')) {
-    function gi_ajax_get_grant_counts() {
+function gi_ajax_get_grant_counts() {
     try {
         // Nonceチェック
         if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'gi_ajax_nonce')) {
@@ -388,7 +371,6 @@ if (!function_exists('gi_ajax_get_grant_counts')) {
         }
         wp_send_json_error('件数の取得中にエラーが発生しました。', 500);
     }
-}
 }
 add_action('wp_ajax_get_grant_counts', 'gi_ajax_get_grant_counts');
 add_action('wp_ajax_nopriv_get_grant_counts', 'gi_ajax_get_grant_counts');

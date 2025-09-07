@@ -908,8 +908,7 @@ add_action('init', array('GI_User_Tour', 'init'));
 /**
  * AJAX handler to mark tour as completed
  */
-if (!function_exists('gi_ajax_complete_tour')) {
-    function gi_ajax_complete_tour() {
+function gi_ajax_complete_tour() {
     check_ajax_referer('gi_ajax_nonce', 'nonce');
     
     $user_id = get_current_user_id();
@@ -919,15 +918,13 @@ if (!function_exists('gi_ajax_complete_tour')) {
     
     wp_send_json_success();
 }
-}
 add_action('wp_ajax_gi_complete_tour', 'gi_ajax_complete_tour');
 add_action('wp_ajax_nopriv_gi_complete_tour', 'gi_ajax_complete_tour');
 
 /**
  * Create error log table
  */
-if (!function_exists('gi_create_error_log_table')) {
-    function gi_create_error_log_table() {
+function gi_create_error_log_table() {
     global $wpdb;
     
     $table_name = $wpdb->prefix . 'gi_error_log';
@@ -950,6 +947,5 @@ if (!function_exists('gi_create_error_log_table')) {
     
     require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
     dbDelta($sql);
-}
 }
 add_action('after_switch_theme', 'gi_create_error_log_table');

@@ -18,8 +18,7 @@ if (!defined('ABSPATH')) {
  * 11.1 全カテゴリ表示関数
  * Display all categories with optional limit
  */
-if (!function_exists('gi_display_all_categories')) {
-    function gi_display_all_categories($args = array()) {
+function gi_display_all_categories($args = array()) {
     // Default arguments
     $defaults = array(
         'initial_count' => 10,          // Initial number of categories to show
@@ -147,14 +146,12 @@ if (!function_exists('gi_display_all_categories')) {
     // Add JavaScript
     gi_category_display_scripts($container_id, $args);
 }
-}
 
 /**
  * 11.2 単一カテゴリ表示
  * Display single category item
  */
-if (!function_exists('gi_display_single_category')) {
-    function gi_display_single_category($category, $args, $is_hidden = false) {
+function gi_display_single_category($category, $args, $is_hidden = false) {
     $post_count = $category->count;
     $category_link = get_term_link($category);
     $category_icon = get_term_meta($category->term_id, 'category_icon', true);
@@ -216,14 +213,12 @@ if (!function_exists('gi_display_single_category')) {
     </div>
     <?php
 }
-}
 
 /**
  * 11.3 「もっと見る」機能実装
  * Implement "Show More" functionality via AJAX
  */
-if (!function_exists('gi_ajax_load_more_categories')) {
-    function gi_ajax_load_more_categories() {
+function gi_ajax_load_more_categories() {
     // Verify nonce
     if (!check_ajax_referer('gi_categories_nonce', 'nonce', false)) {
         wp_send_json_error(array('message' => 'セキュリティチェックに失敗しました。'));
@@ -279,7 +274,6 @@ if (!function_exists('gi_ajax_load_more_categories')) {
         wp_send_json_error(array('message' => 'カテゴリの読み込み中にエラーが発生しました。'));
     }
 }
-}
 add_action('wp_ajax_gi_load_more_categories', 'gi_ajax_load_more_categories');
 add_action('wp_ajax_nopriv_gi_load_more_categories', 'gi_ajax_load_more_categories');
 
@@ -287,8 +281,7 @@ add_action('wp_ajax_nopriv_gi_load_more_categories', 'gi_ajax_load_more_categori
  * 11.4 無限スクロール対応
  * Implement infinite scroll functionality
  */
-if (!function_exists('gi_category_display_scripts')) {
-    function gi_category_display_scripts($container_id, $args) {
+function gi_category_display_scripts($container_id, $args) {
     ?>
     <script>
     (function() {
@@ -415,13 +408,11 @@ if (!function_exists('gi_category_display_scripts')) {
     </script>
     <?php
 }
-}
 
 /**
  * Add category display styles
  */
-if (!function_exists('gi_category_display_styles')) {
-    function gi_category_display_styles() {
+function gi_category_display_styles() {
     ?>
     <style>
         /* Category Grid Styles */
@@ -657,13 +648,11 @@ if (!function_exists('gi_category_display_styles')) {
     </style>
     <?php
 }
-}
 
 /**
  * Shortcode for displaying all categories
  */
-if (!function_exists('gi_all_categories_shortcode')) {
-    function gi_all_categories_shortcode($atts) {
+function gi_all_categories_shortcode($atts) {
     $atts = shortcode_atts(array(
         'initial_count' => 10,
         'show_more_count' => 10,
@@ -690,7 +679,6 @@ if (!function_exists('gi_all_categories_shortcode')) {
     ob_start();
     gi_display_all_categories($atts);
     return ob_get_clean();
-}
 }
 add_shortcode('gi_all_categories', 'gi_all_categories_shortcode');
 
@@ -799,9 +787,7 @@ class GI_Categories_Widget extends WP_Widget {
 /**
  * Register widget
  */
-if (!function_exists('gi_register_categories_widget')) {
-    function gi_register_categories_widget() {
+function gi_register_categories_widget() {
     register_widget('GI_Categories_Widget');
-}
 }
 add_action('widgets_init', 'gi_register_categories_widget');

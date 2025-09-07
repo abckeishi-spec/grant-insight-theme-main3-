@@ -18,8 +18,7 @@ if (!defined('ABSPATH')) {
  * @param int $size アイコンサイズ（px）
  * @return string HTML出力
  */
-if (!function_exists('gi_get_custom_icon')) {
-    function gi_get_custom_icon($icon_type, $fallback_emoji = '', $class = '', $size = 24) {
+function gi_get_custom_icon($icon_type, $fallback_emoji = '', $class = '', $size = 24) {
     $custom_icon_url = get_theme_mod("gi_icon_{$icon_type}");
     
     if ($custom_icon_url) {
@@ -57,7 +56,6 @@ if (!function_exists('gi_get_custom_icon')) {
     
     return '';
 }
-}
 
 /**
  * テキスト内の絵文字を自動でカスタムアイコンに置換
@@ -65,8 +63,7 @@ if (!function_exists('gi_get_custom_icon')) {
  * @param string $content コンテンツ
  * @return string 置換後のコンテンツ
  */
-if (!function_exists('gi_replace_emoji_with_custom_icons')) {
-    function gi_replace_emoji_with_custom_icons($content) {
+function gi_replace_emoji_with_custom_icons($content) {
     // 絵文字とアイコンタイプのマッピング
     $emoji_map = array(
         '🔍' => array('type' => 'search', 'size' => 20),
@@ -122,7 +119,6 @@ if (!function_exists('gi_replace_emoji_with_custom_icons')) {
     
     return $content;
 }
-}
 
 // コンテンツ出力時に自動置換を適用（優先度を調整）
 add_filter('the_content', 'gi_replace_emoji_with_custom_icons', 15);
@@ -138,8 +134,7 @@ add_filter('widget_text', 'gi_replace_emoji_with_custom_icons', 15);
  * @param bool $link_home ホームへのリンクを付けるか
  * @return void
  */
-if (!function_exists('gi_display_custom_logo')) {
-    function gi_display_custom_logo($location = 'header', $class = '', $link_home = true) {
+function gi_display_custom_logo($location = 'header', $class = '', $link_home = true) {
     $logo_setting = '';
     $default_class = 'gi-custom-logo';
     
@@ -211,13 +206,11 @@ if (!function_exists('gi_display_custom_logo')) {
     
     echo ob_get_clean();
 }
-}
 
 /**
  * ファビコンを動的に設定
  */
-if (!function_exists('gi_custom_favicon')) {
-    function gi_custom_favicon() {
+function gi_custom_favicon() {
     $favicon_url = get_theme_mod('gi_favicon');
     
     if ($favicon_url) {
@@ -238,7 +231,6 @@ if (!function_exists('gi_custom_favicon')) {
         }
     }
 }
-}
 add_action('wp_head', 'gi_custom_favicon', 5);
 add_action('admin_head', 'gi_custom_favicon', 5);
 
@@ -249,8 +241,7 @@ add_action('admin_head', 'gi_custom_favicon', 5);
  * @param int $size アイコンサイズ
  * @return string アイコンHTML
  */
-if (!function_exists('gi_get_category_icon')) {
-    function gi_get_category_icon($category_slug, $size = 24) {
+function gi_get_category_icon($category_slug, $size = 24) {
     $icon_map = array(
         'it-digital' => array('icon' => 'it_digital', 'emoji' => '💻'),
         'manufacturing' => array('icon' => 'manufacturing', 'emoji' => '🏭'),
@@ -280,7 +271,6 @@ if (!function_exists('gi_get_category_icon')) {
     // デフォルトアイコン
     return gi_get_custom_icon('default', '📁', 'category-icon', $size);
 }
-}
 
 /**
  * ステータス別アイコン取得関数
@@ -289,8 +279,7 @@ if (!function_exists('gi_get_category_icon')) {
  * @param int $size アイコンサイズ
  * @return string アイコンHTML
  */
-if (!function_exists('gi_get_status_icon')) {
-    function gi_get_status_icon($status, $size = 20) {
+function gi_get_status_icon($status, $size = 20) {
     $icon_map = array(
         'featured' => array('icon' => 'featured', 'emoji' => '🔥'),
         'new' => array('icon' => 'new', 'emoji' => '⚡'),
@@ -314,13 +303,11 @@ if (!function_exists('gi_get_status_icon')) {
     
     return '';
 }
-}
 
 /**
  * アイコンのインラインCSS生成
  */
-if (!function_exists('gi_icon_inline_styles')) {
-    function gi_icon_inline_styles() {
+function gi_icon_inline_styles() {
     ?>
     <style type="text/css">
         /* カスタムアイコンの基本スタイル */
@@ -420,14 +407,12 @@ if (!function_exists('gi_icon_inline_styles')) {
     </style>
     <?php
 }
-}
 add_action('wp_head', 'gi_icon_inline_styles', 15);
 
 /**
  * 管理画面でのアイコンプレビュー
  */
-if (!function_exists('gi_admin_icon_preview_script')) {
-    function gi_admin_icon_preview_script() {
+function gi_admin_icon_preview_script() {
     if (!is_customize_preview()) {
         return;
     }
@@ -464,6 +449,5 @@ if (!function_exists('gi_admin_icon_preview_script')) {
     })(jQuery);
     </script>
     <?php
-}
 }
 add_action('customize_preview_init', 'gi_admin_icon_preview_script');

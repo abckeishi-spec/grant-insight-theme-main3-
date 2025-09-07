@@ -16,8 +16,7 @@ if (!defined('ABSPATH')) {
  * @param int $post_id 投稿ID
  * @return void
  */
-if (!function_exists('gi_unify_amount_fields')) {
-    function gi_unify_amount_fields($post_id) {
+function gi_unify_amount_fields($post_id) {
     // 自動保存時はスキップ
     if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
         return;
@@ -78,7 +77,6 @@ if (!function_exists('gi_unify_amount_fields')) {
         update_post_meta($post_id, 'max_amount_numeric', 0);
     }
 }
-}
 
 /**
  * 日付フィールドの統一処理
@@ -87,8 +85,7 @@ if (!function_exists('gi_unify_amount_fields')) {
  * @param int $post_id 投稿ID
  * @return void
  */
-if (!function_exists('gi_unify_date_fields')) {
-    function gi_unify_date_fields($post_id) {
+function gi_unify_date_fields($post_id) {
     // 自動保存時はスキップ
     if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
         return;
@@ -149,7 +146,6 @@ if (!function_exists('gi_unify_date_fields')) {
         }
     }
 }
-}
 
 /**
  * ACFフィールド保存時のバリデーション
@@ -157,8 +153,7 @@ if (!function_exists('gi_unify_date_fields')) {
  * @param int $post_id 投稿ID
  * @return void
  */
-if (!function_exists('gi_validate_acf_fields')) {
-    function gi_validate_acf_fields($post_id) {
+function gi_validate_acf_fields($post_id) {
     // 自動保存時はスキップ
     if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
         return;
@@ -240,15 +235,13 @@ if (!function_exists('gi_validate_acf_fields')) {
         }
     }
 }
-}
 add_action('acf/save_post', 'gi_validate_acf_fields', 20);
 add_action('save_post', 'gi_validate_acf_fields', 20);
 
 /**
  * 期限切れ助成金の自動ステータス更新（Cronジョブ）
  */
-if (!function_exists('gi_check_expired_grants')) {
-    function gi_check_expired_grants() {
+function gi_check_expired_grants() {
     $today_ymd = intval(date('Ymd'));
     
     // 期限切れの助成金を取得
@@ -296,7 +289,6 @@ if (!function_exists('gi_check_expired_grants')) {
         wp_reset_postdata();
     }
 }
-}
 
 // 毎日実行するCronジョブを設定
 if (!wp_next_scheduled('gi_check_expired_grants_event')) {
@@ -307,8 +299,7 @@ add_action('gi_check_expired_grants_event', 'gi_check_expired_grants');
 /**
  * バリデーションエラーの表示（管理画面）
  */
-if (!function_exists('gi_display_validation_errors')) {
-    function gi_display_validation_errors() {
+function gi_display_validation_errors() {
     if (!is_admin()) {
         return;
     }
@@ -334,7 +325,6 @@ if (!function_exists('gi_display_validation_errors')) {
         delete_transient('gi_acf_validation_errors_' . $post->ID);
     }
 }
-}
 add_action('admin_notices', 'gi_display_validation_errors');
 
 /**
@@ -344,8 +334,7 @@ add_action('admin_notices', 'gi_display_validation_errors');
  * @param string $format フォーマット（'man'=万円, 'yen'=円）
  * @return string フォーマット済み金額
  */
-if (!function_exists('gi_format_amount_display')) {
-    function gi_format_amount_display($amount_numeric, $format = 'man') {
+function gi_format_amount_display($amount_numeric, $format = 'man') {
     $amount_numeric = intval($amount_numeric);
     
     if ($amount_numeric <= 0) {
@@ -382,7 +371,6 @@ if (!function_exists('gi_format_amount_display')) {
             return number_format($amount_numeric);
     }
 }
-}
 
 /**
  * 期限の表示フォーマット関数
@@ -391,8 +379,7 @@ if (!function_exists('gi_format_amount_display')) {
  * @param string $format フォーマット
  * @return string フォーマット済み日付
  */
-if (!function_exists('gi_format_deadline_display')) {
-    function gi_format_deadline_display($deadline_ymd, $format = 'relative') {
+function gi_format_deadline_display($deadline_ymd, $format = 'relative') {
     $deadline_ymd = intval($deadline_ymd);
     
     if ($deadline_ymd <= 0) {
@@ -437,5 +424,4 @@ if (!function_exists('gi_format_deadline_display')) {
         default:
             return date($format, $deadline_timestamp);
     }
-}
 }
