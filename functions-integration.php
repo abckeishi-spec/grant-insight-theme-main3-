@@ -21,6 +21,11 @@ if (!defined('ABSPATH')) {
 function gi_load_phase1_improvements() {
     $theme_dir = get_template_directory();
     
+    // 安全な出力関数の読み込み（最優先）
+    if (file_exists($theme_dir . '/safe-output-functions.php')) {
+        require_once $theme_dir . '/safe-output-functions.php';
+    }
+    
     // 改善版ヘルパー関数の読み込み
     if (file_exists($theme_dir . '/helpers-improved.php')) {
         require_once $theme_dir . '/helpers-improved.php';
