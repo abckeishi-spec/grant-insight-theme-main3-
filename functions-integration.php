@@ -40,6 +40,16 @@ function gi_load_phase1_improvements() {
     if (file_exists($theme_dir . '/ai-diagnosis.php')) {
         require_once $theme_dir . '/ai-diagnosis.php';
     }
+    
+    // カスタマイザー設定の読み込み（タスク4&5）
+    if (file_exists($theme_dir . '/customizer-settings.php')) {
+        require_once $theme_dir . '/customizer-settings.php';
+    }
+    
+    // アイコン管理機能の読み込み（タスク5）
+    if (file_exists($theme_dir . '/icon-management.php')) {
+        require_once $theme_dir . '/icon-management.php';
+    }
 }
 add_action('after_setup_theme', 'gi_load_phase1_improvements', 5);
 

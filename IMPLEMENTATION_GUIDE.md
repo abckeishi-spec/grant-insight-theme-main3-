@@ -26,6 +26,21 @@
 - エラー時のフォールバック機能
 - セッション管理
 
+### 4. ヘッダー・フッター色設定機能
+- カスタマイザーでの色設定
+- ヘッダー背景色・テキスト色・リンク色
+- フッター背景色・テキスト色・リンク色
+- アクセント色設定
+- ライブプレビュー対応
+
+### 5. ロゴ・アイコン・絵文字統合管理システム
+- メインロゴ、フッターロゴ、モバイルロゴの管理
+- ファビコン設定
+- 絵文字の画像置換機能
+- カテゴリー別カスタムアイコン
+- ステータス別カスタムアイコン
+- UI要素のカスタムアイコン
+
 ## 📁 ファイル構成
 
 ```
@@ -34,11 +49,14 @@
 ├── helpers-improved.php          # 改善版ヘルパー関数
 ├── grant-counts.php              # 動的件数取得機能
 ├── ai-diagnosis.php              # AI診断機能
+├── customizer-settings.php       # カスタマイザー設定
+├── icon-management.php           # アイコン管理機能
 ├── functions-integration.php     # 統合用ファイル
 └── assets/
     └── js/
         ├── ai-diagnosis.js       # AI診断フロントエンド
-        └── dynamic-counts.js     # 動的件数更新JS
+        ├── dynamic-counts.js     # 動的件数更新JS
+        └── customizer-preview.js # カスタマイザープレビュー
 ```
 
 ## 🚀 実装手順
@@ -75,6 +93,20 @@ require_once get_template_directory() . '/functions-integration.php';
 
 ## 🔧 使用方法
 
+### カスタマイザー設定（タスク4&5）
+
+#### 色設定
+1. 管理画面 > 外観 > カスタマイズ
+2. 「ヘッダー色設定」または「フッター色設定」を選択
+3. 各色を設定してライブプレビューで確認
+4. 「公開」ボタンで保存
+
+#### ロゴ・アイコン設定
+1. 管理画面 > 外観 > カスタマイズ
+2. 「ロゴ・サイトアイデンティティ」を選択
+3. 各ロゴ画像をアップロード
+4. 「絵文字・アイコン設定」で各アイコンを設定
+
 ### 動的件数表示
 
 #### HTMLでの使用例
@@ -94,6 +126,26 @@ require_once get_template_directory() . '/functions-integration.php';
 [grant_count type="category" slug="it-digital" format="%d件"]
 [grant_count type="prefecture" slug="tokyo" format="%d件"]
 [grant_count type="total" format="全%d件"]
+```
+
+### ロゴ・アイコン表示（タスク5）
+
+#### テンプレートでの使用例
+```php
+// ヘッダーでロゴ表示
+<?php gi_display_custom_logo('header', 'my-header-logo'); ?>
+
+// フッターでロゴ表示
+<?php gi_display_custom_logo('footer', 'my-footer-logo'); ?>
+
+// カスタムアイコン個別表示
+<?php echo gi_get_custom_icon('featured', '🔥', 'status-icon', '24'); ?>
+
+// カテゴリーアイコン表示
+<?php echo gi_get_category_icon('it-digital', 32); ?>
+
+// ステータスアイコン表示
+<?php echo gi_get_status_icon('active', 20); ?>
 ```
 
 ### AI診断機能

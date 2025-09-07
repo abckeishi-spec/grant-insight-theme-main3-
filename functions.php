@@ -3165,5 +3165,12 @@ function gi_acf_json_save_point($path) {
 }
 add_filter('acf/settings/save_json', 'gi_acf_json_save_point');
 
+/**
+ * Phase 1 改修機能の読み込み
+ * カスタマイザー設定、アイコン管理、セキュリティ強化機能を含む
+ */
+if (file_exists(get_template_directory() . '/functions-integration.php')) {
+    require_once get_template_directory() . '/functions-integration.php';
+}
 
 ?>
