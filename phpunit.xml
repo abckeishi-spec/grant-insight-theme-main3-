@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<phpunit
+    bootstrap="tests/bootstrap.php"
+    backupGlobals="false"
+    colors="true"
+    convertErrorsToExceptions="true"
+    convertNoticesToExceptions="true"
+    convertWarningsToExceptions="true"
+    processIsolation="false"
+    stopOnFailure="false"
+    verbose="true"
+>
+    <testsuites>
+        <testsuite name="Grant Insight Theme Test Suite">
+            <directory>./tests/</directory>
+        </testsuite>
+    </testsuites>
+    
+    <filter>
+        <whitelist processUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">./src/</directory>
+        </whitelist>
+    </filter>
+    
+    <logging>
+        <log type="coverage-xml" target="./coverage.xml"/>
+        <log type="coverage-html" target="./coverage-html"/>
+    </logging>
+</phpunit>
+

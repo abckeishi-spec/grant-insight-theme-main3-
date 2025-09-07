@@ -1,0 +1,9 @@
+ai_summary
+application_status
+deadline_date
+deadline_text
+difficulty_level
+max_amount
+max_amount_numeric
+official_url
+organization
