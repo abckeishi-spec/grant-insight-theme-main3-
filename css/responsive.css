@@ -1,0 +1,569 @@
+/**
+ * Grant Insight Responsive CSS
+ * レスポンシブデザイン対応スタイル
+ * 
+ * @package Grant_Insight_Perfect
+ * @version 1.0
+ */
+
+/* ベースレイアウト */
+.gi-container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 16px;
+}
+
+.gi-grid {
+    display: grid;
+    gap: 1rem;
+}
+
+.gi-flex {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+/* モバイルファースト（320px以上） */
+@media screen and (min-width: 320px) {
+    .gi-container {
+        padding: 0 12px;
+    }
+    
+    .gi-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .gi-card {
+        padding: 16px;
+        margin-bottom: 16px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    
+    .gi-button {
+        width: 100%;
+        padding: 12px 16px;
+        font-size: 16px;
+        border-radius: 6px;
+        border: none;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+    
+    .gi-input {
+        width: 100%;
+        padding: 12px 16px;
+        font-size: 16px;
+        border: 1px solid #d1d5db;
+        border-radius: 6px;
+        box-sizing: border-box;
+    }
+    
+    /* ナビゲーション - モバイル */
+    .gi-nav {
+        position: relative;
+    }
+    
+    .gi-nav-toggle {
+        display: block;
+        background: none;
+        border: none;
+        font-size: 24px;
+        cursor: pointer;
+        padding: 8px;
+    }
+    
+    .gi-nav-menu {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: #fff;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        z-index: 1000;
+    }
+    
+    .gi-nav-menu.active {
+        display: block;
+    }
+    
+    .gi-nav-menu li {
+        border-bottom: 1px solid #e5e7eb;
+    }
+    
+    .gi-nav-menu a {
+        display: block;
+        padding: 16px 20px;
+        text-decoration: none;
+        color: #374151;
+    }
+    
+    /* 助成金カード - モバイル */
+    .gi-grant-card {
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        padding: 16px;
+        margin-bottom: 16px;
+        background: #fff;
+    }
+    
+    .gi-grant-title {
+        font-size: 18px;
+        font-weight: 600;
+        margin-bottom: 8px;
+        line-height: 1.4;
+    }
+    
+    .gi-grant-meta {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin-bottom: 12px;
+    }
+    
+    .gi-grant-amount {
+        font-size: 16px;
+        font-weight: 500;
+        color: #059669;
+    }
+    
+    .gi-grant-deadline {
+        font-size: 14px;
+        color: #6b7280;
+    }
+    
+    .gi-grant-excerpt {
+        font-size: 14px;
+        line-height: 1.5;
+        color: #4b5563;
+        margin-bottom: 12px;
+    }
+    
+    .gi-grant-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    /* 検索フォーム - モバイル */
+    .gi-search-form {
+        margin-bottom: 24px;
+    }
+    
+    .gi-search-input {
+        width: 100%;
+        margin-bottom: 12px;
+    }
+    
+    .gi-search-filters {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+    
+    .gi-filter-group {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .gi-filter-label {
+        font-size: 14px;
+        font-weight: 500;
+        color: #374151;
+    }
+    
+    .gi-filter-select {
+        width: 100%;
+        padding: 8px 12px;
+        border: 1px solid #d1d5db;
+        border-radius: 4px;
+        font-size: 14px;
+    }
+}
+
+/* 大きなモバイル（480px以上） */
+@media screen and (min-width: 480px) {
+    .gi-container {
+        padding: 0 16px;
+    }
+    
+    .gi-grant-meta {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .gi-grant-actions {
+        flex-direction: row;
+        justify-content: space-between;
+    }
+    
+    .gi-button {
+        width: auto;
+        min-width: 120px;
+    }
+    
+    .gi-search-filters {
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+    
+    .gi-filter-group {
+        flex: 1;
+        min-width: 200px;
+    }
+}
+
+/* タブレット（768px以上） */
+@media screen and (min-width: 768px) {
+    .gi-container {
+        padding: 0 24px;
+    }
+    
+    .gi-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 24px;
+    }
+    
+    .gi-grid-3 {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    
+    /* ナビゲーション - タブレット */
+    .gi-nav-toggle {
+        display: none;
+    }
+    
+    .gi-nav-menu {
+        display: flex;
+        position: static;
+        background: none;
+        box-shadow: none;
+    }
+    
+    .gi-nav-menu li {
+        border-bottom: none;
+    }
+    
+    .gi-nav-menu a {
+        padding: 8px 16px;
+    }
+    
+    /* 助成金カード - タブレット */
+    .gi-grant-card {
+        padding: 20px;
+    }
+    
+    .gi-grant-title {
+        font-size: 20px;
+    }
+    
+    /* サイドバーレイアウト */
+    .gi-main-content {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 32px;
+    }
+    
+    .gi-sidebar {
+        background: #f9fafb;
+        padding: 24px;
+        border-radius: 8px;
+        height: fit-content;
+        position: sticky;
+        top: 24px;
+    }
+    
+    /* フィルター - タブレット */
+    .gi-search-filters {
+        gap: 16px;
+    }
+    
+    .gi-filter-group {
+        min-width: 150px;
+    }
+}
+
+/* 大きなタブレット（1024px以上） */
+@media screen and (min-width: 1024px) {
+    .gi-container {
+        padding: 0 32px;
+    }
+    
+    .gi-grid {
+        gap: 32px;
+    }
+    
+    .gi-grid-4 {
+        grid-template-columns: repeat(4, 1fr);
+    }
+    
+    /* ヘッダー - デスクトップ */
+    .gi-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 16px 0;
+    }
+    
+    .gi-logo {
+        font-size: 24px;
+        font-weight: 700;
+    }
+    
+    /* 助成金カード - デスクトップ */
+    .gi-grant-card {
+        padding: 24px;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    
+    .gi-grant-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    }
+    
+    .gi-grant-title {
+        font-size: 22px;
+    }
+    
+    /* 詳細ページレイアウト */
+    .gi-single-content {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 48px;
+    }
+    
+    .gi-content-main {
+        max-width: none;
+    }
+    
+    .gi-content-sidebar {
+        background: #f9fafb;
+        padding: 32px;
+        border-radius: 12px;
+        height: fit-content;
+        position: sticky;
+        top: 32px;
+    }
+}
+
+/* デスクトップ（1200px以上） */
+@media screen and (min-width: 1200px) {
+    .gi-container {
+        max-width: 1200px;
+    }
+    
+    .gi-grid {
+        gap: 40px;
+    }
+    
+    /* ヒーローセクション */
+    .gi-hero {
+        text-align: center;
+        padding: 80px 0;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border-radius: 12px;
+        margin-bottom: 48px;
+    }
+    
+    .gi-hero-title {
+        font-size: 48px;
+        font-weight: 700;
+        margin-bottom: 16px;
+        line-height: 1.2;
+    }
+    
+    .gi-hero-subtitle {
+        font-size: 20px;
+        margin-bottom: 32px;
+        opacity: 0.9;
+    }
+    
+    /* 統計セクション */
+    .gi-stats {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 24px;
+        margin: 48px 0;
+    }
+    
+    .gi-stat-item {
+        text-align: center;
+        padding: 32px 24px;
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    }
+    
+    .gi-stat-number {
+        font-size: 36px;
+        font-weight: 700;
+        color: #1e40af;
+        margin-bottom: 8px;
+    }
+    
+    .gi-stat-label {
+        font-size: 16px;
+        color: #6b7280;
+    }
+}
+
+/* 大きなデスクトップ（1440px以上） */
+@media screen and (min-width: 1440px) {
+    .gi-container {
+        max-width: 1400px;
+    }
+    
+    .gi-hero-title {
+        font-size: 56px;
+    }
+    
+    .gi-hero-subtitle {
+        font-size: 24px;
+    }
+    
+    .gi-grant-card {
+        padding: 32px;
+    }
+    
+    .gi-grant-title {
+        font-size: 24px;
+    }
+}
+
+/* プリント用スタイル */
+@media print {
+    .gi-nav,
+    .gi-search-form,
+    .gi-button,
+    .gi-sidebar {
+        display: none !important;
+    }
+    
+    .gi-container {
+        max-width: none;
+        padding: 0;
+    }
+    
+    .gi-grant-card {
+        border: 1px solid #000;
+        margin-bottom: 20px;
+        break-inside: avoid;
+    }
+    
+    .gi-grant-title {
+        font-size: 18px;
+        font-weight: bold;
+    }
+    
+    .gi-grant-amount {
+        color: #000 !important;
+    }
+    
+    body {
+        font-size: 12pt;
+        line-height: 1.4;
+        color: #000;
+        background: #fff;
+    }
+}
+
+/* 高解像度ディスプレイ対応 */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    .gi-logo img {
+        image-rendering: -webkit-optimize-contrast;
+        image-rendering: crisp-edges;
+    }
+}
+
+/* 横向きタブレット対応 */
+@media screen and (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) {
+    .gi-main-content {
+        grid-template-columns: 1fr;
+    }
+    
+    .gi-sidebar {
+        position: static;
+        margin-top: 32px;
+    }
+    
+    .gi-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* 縦向きタブレット対応 */
+@media screen and (min-width: 768px) and (max-width: 1024px) and (orientation: portrait) {
+    .gi-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .gi-main-content {
+        grid-template-columns: 1fr;
+    }
+    
+    .gi-sidebar {
+        order: -1;
+        position: static;
+        margin-bottom: 32px;
+    }
+}
+
+/* 小さな画面での読みやすさ向上 */
+@media screen and (max-width: 480px) {
+    body {
+        font-size: 16px;
+        line-height: 1.6;
+    }
+    
+    .gi-grant-title {
+        font-size: 16px;
+        line-height: 1.4;
+    }
+    
+    .gi-grant-excerpt {
+        font-size: 14px;
+        line-height: 1.5;
+    }
+    
+    .gi-button {
+        font-size: 16px;
+        padding: 14px 20px;
+        min-height: 44px; /* タッチターゲットサイズ */
+    }
+    
+    .gi-input {
+        font-size: 16px; /* iOSでのズーム防止 */
+        min-height: 44px;
+    }
+}
+
+/* コンテナクエリ対応（将来的な拡張） */
+@supports (container-type: inline-size) {
+    .gi-card-container {
+        container-type: inline-size;
+    }
+    
+    @container (min-width: 300px) {
+        .gi-card {
+            padding: 20px;
+        }
+    }
+    
+    @container (min-width: 500px) {
+        .gi-card {
+            padding: 24px;
+        }
+        
+        .gi-card-content {
+            display: flex;
+            gap: 16px;
+        }
+    }
+}
+
